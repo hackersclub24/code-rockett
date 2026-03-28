@@ -1,52 +1,72 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { LogIn, LogOut, LayoutDashboard, Settings } from "lucide-react";
+import { LogIn, LayoutDashboard, Settings, Rocket } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 export default function Navbar() {
   const { user, login, logout, loading } = useAuth();
-  const isAdmin = user?.email === "your-email@gmail.com";
+  const isAdmin = user?.email === "abhishekmathur200624@gmail.com";
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
+
+  const avatarInitial = (user?.displayName?.[0] || user?.email?.[0] || "U").toUpperCase();
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-zinc-200 dark:border-zinc-800 transition-colors duration-300">
+    <nav className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--surface-strong)]/92 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-              Code Rocket 🚀
-            </span>
+        <div className="flex justify-between h-[72px] items-center py-3">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-[var(--brand-soft)] text-[var(--brand)] flex items-center justify-center border border-[var(--line)]">
+              <Rocket className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="block text-xl font-bold leading-none">Code Rocket</span>
+              <span className="block text-xs text-[var(--muted)] tracking-[0.12em] uppercase">Teach. Learn. Launch.</span>
+            </div>
           </Link>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {!loading && (
               <>
                 <ThemeToggle />
                 {user ? (
                   <>
-                    <Link href="/dashboard" className="text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium flex items-center space-x-1 transition-colors">
+                    <Link href="/dashboard" className="px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:text-[var(--brand)] hover:bg-[var(--brand-soft)] font-semibold flex items-center space-x-1 transition-all">
                       <LayoutDashboard className="w-4 h-4" />
                       <span>Dashboard</span>
                     </Link>
                     {isAdmin && (
-                      <Link href="/admin" className="text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium flex items-center space-x-1 transition-colors">
+                      <Link href="/admin" className="px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:text-[var(--brand)] hover:bg-[var(--brand-soft)] font-semibold flex items-center space-x-1 transition-all">
                         <Settings className="w-4 h-4" />
                         <span>Admin</span>
                       </Link>
                     )}
                     <button
                       onClick={logout}
-                      className="flex items-center space-x-2 px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 transition-all duration-300"
+                      className="flex items-center space-x-2 px-3 py-2 ui-btn ui-btn-secondary text-sm font-semibold"
                     >
-                      <img src={user.photoURL || "/default-avatar.png"} alt="avatar" className="w-6 h-6 rounded-full" />
-                      <span className="hidden sm:inline">Logout</span>
+                      {user.photoURL && failedAvatarUrl !== user.photoURL ? (
+                        <img
+                          src={user.photoURL}
+                          alt="avatar"
+                          className="w-6 h-6 rounded-full"
+                          onError={() => setFailedAvatarUrl(user.photoURL)}
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <div className="w-6 h-6 rounded-full bg-[var(--brand-soft)] text-[var(--brand)] text-[10px] font-bold flex items-center justify-center">
+                          {avatarInitial}
+                        </div>
+                      )}
+                      <span className="hidden sm:inline">Log out</span>
                     </button>
                   </>
                 ) : (
                   <button
                     onClick={login}
-                    className="flex items-center space-x-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/30 transition-all duration-300 hover:-translate-y-0.5"
+                    className="flex items-center space-x-2 px-5 py-2.5 ui-btn ui-btn-primary text-sm font-bold"
                   >
                     <LogIn className="w-4 h-4" />
                     <span>Sign in</span>

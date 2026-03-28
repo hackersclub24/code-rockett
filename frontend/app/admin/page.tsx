@@ -8,14 +8,42 @@ import { Settings, Plus, Calendar, Users, LayoutDashboard, BookOpen, LogOut } fr
 
 type Tab = "dashboard" | "courses" | "users" | "settings";
 
+interface Course {
+  id: number;
+  title: string;
+  description?: string;
+  created_at?: string;
+}
+
+interface EnrollmentUser {
+  id: number;
+  email: string;
+}
+
+interface Enrollment {
+  id: number;
+  user_id: number;
+  course_id: number;
+  created_at: string;
+  course: Course;
+  user?: EnrollmentUser;
+}
+
+interface SystemUser {
+  id: number;
+  email: string;
+  created_at: string;
+  is_teacher?: boolean;
+}
+
 export default function AdminPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
-  const [courses, setCourses] = useState<any[]>([]);
-  const [enrollments, setEnrollments] = useState<any[]>([]);
-  const [systemUsers, setSystemUsers] = useState<any[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [systemUsers, setSystemUsers] = useState<SystemUser[]>([]);
   
   // Forms state
   const [newCourse, setNewCourse] = useState({ title: "", description: "" });
@@ -57,7 +85,7 @@ export default function AdminPage() {
       setCourses([res.data, ...courses]);
       setNewCourse({ title: "", description: "" });
       alert("Course created!");
-    } catch (err) {
+    } catch {
       alert("Failed to create course");
     }
   };
@@ -73,28 +101,28 @@ export default function AdminPage() {
       });
       setNewClass({ course_id: "", title: "", datetime: "", meet_link: "" });
       alert("Class scheduled!");
-    } catch (err) {
+    } catch {
       alert("Failed to schedule class");
     }
   };
 
-  if (authLoading || loading) return <div className="p-8 flex items-center justify-center min-h-screen text-zinc-500 dark:text-zinc-400 animate-pulse text-lg font-bold">Loading admin panel...</div>;
+  if (authLoading || loading) return <div className="p-8 flex items-center justify-center min-h-screen section-subtitle animate-pulse text-lg font-bold">Loading admin panel...</div>;
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)] bg-zinc-50 dark:bg-zinc-950 transition-colors duration-300">
+    <div className="flex min-h-[calc(100vh-64px)] bg-[var(--background)] transition-colors duration-300">
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 flex flex-col hidden md:flex transition-colors duration-300">
-        <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center space-x-3">
-           <div className="p-2 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 rounded-lg">
+      <aside className="w-64 bg-[var(--surface-strong)] border-r border-[var(--line)] flex flex-col hidden md:flex transition-colors duration-300">
+        <div className="p-6 border-b border-[var(--line)] flex items-center space-x-3">
+           <div className="p-2 bg-[var(--brand-soft)] text-[var(--brand)] rounded-lg">
              <Settings className="w-6 h-6" />
            </div>
-           <span className="font-bold text-xl text-zinc-900 dark:text-white tracking-tight">Admin<span className="text-indigo-600 dark:text-indigo-400">Pro</span></span>
+           <span className="font-bold text-xl section-title tracking-tight">Admin<span className="text-[var(--brand)]">Pro</span></span>
         </div>
         
         <nav className="flex-1 px-4 py-6 space-y-2">
           <button 
             onClick={() => setActiveTab("dashboard")}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'}`}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-[var(--brand-soft)] text-[var(--brand)]' : 'section-subtitle hover:bg-[var(--brand-soft)]/50'}`}
           >
             <LayoutDashboard className="w-5 h-5" />
             <span>Dashboard</span>
@@ -102,7 +130,7 @@ export default function AdminPage() {
           
           <button 
             onClick={() => setActiveTab("courses")}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'courses' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'}`}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'courses' ? 'bg-[var(--brand-soft)] text-[var(--brand)]' : 'section-subtitle hover:bg-[var(--brand-soft)]/50'}`}
           >
             <BookOpen className="w-5 h-5" />
             <span>Courses</span>
@@ -110,7 +138,7 @@ export default function AdminPage() {
           
           <button 
             onClick={() => setActiveTab("users")}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'users' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'}`}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'users' ? 'bg-[var(--brand-soft)] text-[var(--brand)]' : 'section-subtitle hover:bg-[var(--brand-soft)]/50'}`}
           >
             <Users className="w-5 h-5" />
             <span>Users</span>
@@ -118,15 +146,15 @@ export default function AdminPage() {
           
           <button 
             onClick={() => setActiveTab("settings")}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'settings' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'}`}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'settings' ? 'bg-[var(--brand-soft)] text-[var(--brand)]' : 'section-subtitle hover:bg-[var(--brand-soft)]/50'}`}
           >
             <Settings className="w-5 h-5" />
             <span>Settings</span>
           </button>
         </nav>
         
-        <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
-           <button onClick={() => router.push('/')} className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+          <div className="p-4 border-t border-[var(--line)]">
+            <button onClick={() => router.push('/')} className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium section-subtitle hover:bg-[var(--brand-soft)]/50 transition-colors">
              <LogOut className="w-5 h-5" />
              <span>Exit to Home</span>
            </button>
@@ -134,7 +162,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-8 overflow-auto app-shell">
         
         {/* DASHBOARD TAB */}
         {activeTab === "dashboard" && (
@@ -188,9 +216,11 @@ export default function AdminPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {enrollments.slice(0, 5).map(e => (
+                      {enrollments.slice(0, 5).map((e) => (
                         <tr key={e.id} className="border-b border-zinc-100 dark:border-zinc-800/50 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-800/20 transition-colors">
-                          <td className="py-4 px-4 font-medium text-zinc-900 dark:text-zinc-100">{e.user.email}</td>
+                          <td className="py-4 px-4 font-medium text-zinc-900 dark:text-zinc-100">
+                            {e.user?.email ?? `User #${e.user_id}`}
+                          </td>
                           <td className="py-4 px-4 text-zinc-600 dark:text-zinc-300">{e.course.title}</td>
                           <td className="py-4 px-4 text-zinc-500 dark:text-zinc-400 text-sm">{new Date(e.created_at).toLocaleDateString()}</td>
                         </tr>
@@ -217,7 +247,7 @@ export default function AdminPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Create Course Component */}
-              <section className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+              <section className="ui-card p-8 rounded-3xl">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center space-x-3">
                   <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 rounded-lg">
                     <Plus className="w-5 h-5" />
@@ -226,35 +256,35 @@ export default function AdminPage() {
                 </h2>
                 <form onSubmit={handleCreateCourse} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Course Title</label>
+                    <label className="ui-label">Course Title</label>
                     <input
                       required
                       type="text"
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent outline-none transition-all text-zinc-900 dark:text-white"
+                      className="ui-input"
                       value={newCourse.title}
                       onChange={e => setNewCourse({...newCourse, title: e.target.value})}
                       placeholder="e.g. Next.js Masterclass"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Description</label>
+                    <label className="ui-label">Description</label>
                     <textarea
                       required
                       rows={4}
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent outline-none transition-all text-zinc-900 dark:text-white"
+                      className="ui-textarea"
                       value={newCourse.description}
                       onChange={e => setNewCourse({...newCourse, description: e.target.value})}
                       placeholder="Describe the course curriculum..."
                     />
                   </div>
-                  <button className="w-full bg-indigo-600 text-white font-bold py-3.5 px-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-600/20">
+                  <button className="w-full ui-btn ui-btn-primary font-bold py-3.5 px-4">
                     Publish Course
                   </button>
                 </form>
               </section>
 
               {/* Create Class Component */}
-              <section className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+              <section className="ui-card p-8 rounded-3xl">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center space-x-3">
                   <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 rounded-lg">
                     <Calendar className="w-5 h-5" />
@@ -263,10 +293,10 @@ export default function AdminPage() {
                 </h2>
                 <form onSubmit={handleCreateClass} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Select Active Course</label>
+                    <label className="ui-label">Select Active Course</label>
                     <select
                       required
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 outline-none transition-all text-zinc-900 dark:text-white cursor-pointer"
+                      className="ui-select cursor-pointer"
                       value={newClass.course_id}
                       onChange={e => setNewClass({...newClass, course_id: e.target.value})}
                     >
@@ -277,38 +307,38 @@ export default function AdminPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Class Topic / Session Title</label>
+                    <label className="ui-label">Class Topic / Session Title</label>
                     <input
                       required
                       type="text"
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 outline-none transition-all text-zinc-900 dark:text-white"
+                      className="ui-input"
                       value={newClass.title}
                       onChange={e => setNewClass({...newClass, title: e.target.value})}
                       placeholder="e.g. Introduction to React Hooks"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Date & Time</label>
+                    <label className="ui-label">Date & Time</label>
                     <input
                       required
                       type="datetime-local"
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 outline-none transition-all text-zinc-900 dark:text-white"
+                      className="ui-input"
                       value={newClass.datetime}
                       onChange={e => setNewClass({...newClass, datetime: e.target.value})}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Meeting Link</label>
+                    <label className="ui-label">Meeting Link</label>
                     <input
                       required
                       type="url"
                       placeholder="https://meet.google.com/xyz-abcd-123"
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 outline-none transition-all text-zinc-900 dark:text-white"
+                      className="ui-input"
                       value={newClass.meet_link}
                       onChange={e => setNewClass({...newClass, meet_link: e.target.value})}
                     />
                   </div>
-                  <button className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold py-3.5 px-4 rounded-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] transition-all">
+                  <button className="w-full ui-btn ui-btn-secondary font-bold py-3.5 px-4">
                     Schedule Session
                   </button>
                 </form>

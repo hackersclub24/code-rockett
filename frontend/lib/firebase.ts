@@ -18,7 +18,7 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 // Initialize Analytics securely (only runs in the browser, prevents SSR crashing)
-let analytics: any = null;
+let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (typeof window !== "undefined") {
   isSupported().then((supported) => {
     if (supported) {

@@ -15,15 +15,21 @@ async def enroll_user(db: AsyncSession, user_id: int, course_id: int):
     db.add(enrollment)
     try:
         await db.commit()
-        await db.refresh(enrollment)
-        return enrollment
+        result = await db.execute(
+            select(Enrollment)
+            .options(selectinload(Enrollment.course), selectinload(Enrollment.user))
+            .filter(Enrollment.user_id == user_id, Enrollment.course_id == course_id)
+        )
+        return result.scalars().first()
     except IntegrityError:
         await db.rollback()
         raise HTTPException(status_code=400, detail="User is already enrolled in this course")
 
 async def get_user_enrollments(db: AsyncSession, user_id: int):
     result = await db.execute(
-        select(Enrollment).options(selectinload(Enrollment.course)).filter(Enrollment.user_id == user_id)
+        select(Enrollment)
+        .options(selectinload(Enrollment.course), selectinload(Enrollment.user))
+        .filter(Enrollment.user_id == user_id)
     )
     return result.scalars().all()
 

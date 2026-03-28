@@ -43,4 +43,5 @@ class EnrollmentResponse(BaseModel):
     course_id: int
     created_at: datetime
     course: CourseResponse
+    user: Optional[UserResponse] = None
     model_config = ConfigDict(from_attributes=True)
