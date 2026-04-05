@@ -34,6 +34,14 @@ interface CourseDetail {
   classes?: Array<{ id: number }>;
 }
 
+interface FeaturedProject {
+  title: string;
+  summary: string;
+  stack: string[];
+  accent: string;
+  href?: string;
+}
+
 const testimonials = [
   {
     name: "Aarav Mehta",
@@ -96,7 +104,7 @@ const roadmapSteps = [
   },
 ];
 
-const projects = [
+const projects: FeaturedProject[] = [
   {
     title: "DevConnect Community Hub",
     summary: "A collaboration platform with events, announcements, and peer discussion channels.",
@@ -173,7 +181,7 @@ export default function LandingPage() {
 
   const totalTracks = courses.length;
   const totalSessions = Object.values(classCountByCourse).reduce((sum, count) => sum + count, 0);
-  const featuredProjects =
+  const featuredProjects: FeaturedProject[] =
     courses.length > 0
       ? courses.slice(0, 3).map((course, idx) => ({
           title: course.title,
@@ -287,8 +295,8 @@ export default function LandingPage() {
               summary={project.summary}
               stack={project.stack}
               accent={project.accent}
-              href={"href" in project ? project.href : undefined}
-              ctaLabel={"href" in project ? "Open Course" : "View Details"}
+              href={project.href}
+              ctaLabel={project.href ? "Open Course" : "View Details"}
             />
           ))}
         </div>
