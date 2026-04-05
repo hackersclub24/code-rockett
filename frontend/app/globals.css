@@ -1,26 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f3f6fb;
-  --foreground: #0f172a;
-  --surface: rgba(255, 255, 255, 0.74);
-  --surface-strong: rgba(255, 255, 255, 0.9);
-  --muted: #334155;
-  --line: rgba(66, 97, 150, 0.26);
+  --background: #f3f6ff;
+  --foreground: #101a3d;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-strong: rgba(255, 255, 255, 0.94);
+  --muted: #4c5d8a;
+  --line: rgba(108, 134, 214, 0.28);
 
-  /* Core SaaS palette */
-  --primary: #1f5fd8;
-  --secondary: #4d86ff;
-  --accent: #ff8d5a;
+  --primary: #6558e8;
+  --secondary: #0ea5e9;
+  --accent: #0891b2;
 
   /* Backward-compatible aliases */
   --brand: var(--primary);
-  --brand-soft: #e7efff;
+  --brand-soft: rgba(101, 88, 232, 0.14);
   --highlight: var(--accent);
 
-  --primary-rgb: 31, 95, 216;
-  --secondary-rgb: 77, 134, 255;
-  --accent-rgb: 255, 141, 90;
+  --primary-rgb: 101, 88, 232;
+  --secondary-rgb: 14, 165, 233;
+  --accent-rgb: 8, 145, 178;
   --brand-rgb: var(--primary-rgb);
   --highlight-rgb: var(--accent-rgb);
 
@@ -29,8 +28,11 @@
   --radius-lg: 1.25rem;
   --radius-xl: 1.5rem;
 
-  --shadow-soft: 0 10px 24px rgba(15, 32, 64, 0.1);
-  --shadow-mid: 0 14px 30px rgba(12, 28, 58, 0.14);
+  --shadow-soft: 0 10px 28px rgba(4, 8, 26, 0.45);
+  --shadow-mid: 0 18px 40px rgba(4, 8, 26, 0.55);
+
+  --shell-top: rgba(255, 255, 255, 0.45);
+  --shell-bottom: rgba(255, 255, 255, 0.04);
 }
 
 @theme inline {
@@ -40,37 +42,46 @@
   --font-serif: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c1220;
-    --foreground: #e9efff;
-    --surface: rgba(17, 27, 46, 0.82);
-    --surface-strong: rgba(20, 31, 52, 0.94);
-    --muted: #c3d2ea;
-    --line: rgba(132, 166, 228, 0.28);
+.dark {
+    --background: #060a1a;
+    --foreground: #f1f5ff;
+    --surface: rgba(12, 20, 45, 0.78);
+    --surface-strong: rgba(15, 24, 53, 0.95);
+    --muted: #a8b7df;
+    --line: rgba(123, 149, 225, 0.26);
 
-    --primary: #77aaff;
-    --secondary: #9fc2ff;
-    --accent: #ffac82;
+    --primary: #7a63ff;
+    --secondary: #34bcff;
+    --accent: #5eead4;
 
     --brand: var(--primary);
-    --brand-soft: rgba(122, 178, 255, 0.2);
+    --brand-soft: rgba(122, 99, 255, 0.2);
     --highlight: var(--accent);
 
-    --primary-rgb: 119, 170, 255;
-    --secondary-rgb: 159, 194, 255;
-    --accent-rgb: 255, 172, 130;
+    --primary-rgb: 122, 99, 255;
+    --secondary-rgb: 52, 188, 255;
+    --accent-rgb: 94, 234, 212;
     --brand-rgb: var(--primary-rgb);
     --highlight-rgb: var(--accent-rgb);
-  }
+
+    --shell-top: rgba(8, 14, 34, 0.58);
+    --shell-bottom: rgba(8, 14, 34, 0.06);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), "Segoe UI", sans-serif;
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(var(--primary-rgb), 0.18), transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(var(--secondary-rgb), 0.13), transparent 28%),
+    linear-gradient(180deg, var(--background) 0%, var(--background) 100%);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 h1,
@@ -119,9 +130,9 @@ p {
 
 .edu-shell {
   background:
-    radial-gradient(circle at 12% 6%, rgba(var(--accent-rgb), 0.16), transparent 24%),
-    radial-gradient(circle at 88% 12%, rgba(var(--secondary-rgb), 0.2), transparent 30%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+    radial-gradient(circle at 12% 6%, rgba(var(--primary-rgb), 0.14), transparent 26%),
+    radial-gradient(circle at 88% 12%, rgba(var(--secondary-rgb), 0.14), transparent 30%),
+    linear-gradient(180deg, var(--shell-top), var(--shell-bottom));
 }
 
 .edu-glass {
