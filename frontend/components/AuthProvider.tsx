@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User, signInWithPopup, googleProvider, auth, firebaseSignOut } from "@/lib/firebase";
+import { User, isFirebaseConfigured, signInWithGoogle, signOutUser, subscribeToAuthChanges } from "@/lib/firebase";
 import api from "@/lib/api";
 
 interface AuthContextType {
@@ -23,7 +23,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    if (!isFirebaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
+    const unsubscribe = subscribeToAuthChanges(async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
         // Automatically sync with backend to get/create user
@@ -41,14 +46,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const didStartLogin = await signInWithGoogle();
+      if (!didStartLogin) {
+        return;
+      }
     } catch (error) {
       console.error("Login failed", error);
     }
   };
 
   const logout = async () => {
-    await firebaseSignOut(auth);
+    await signOutUser();
   };
 
   return (

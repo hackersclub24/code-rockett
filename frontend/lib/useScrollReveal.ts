@@ -4,11 +4,13 @@ import { useEffect } from "react";
 
 export function useScrollReveal(trigger: number | string = 0) {
   useEffect(() => {
-    const nodes = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-visible)")
-    );
+    const selector = "[data-reveal]:not(.is-visible)";
 
-    if (nodes.length === 0) {
+    // Fallback for older/limited browsers: show content without animation.
+    if (!("IntersectionObserver" in window)) {
+      document.querySelectorAll<HTMLElement>(selector).forEach((node) => {
+        node.classList.add("is-visible");
+      });
       return;
     }
 
@@ -16,8 +18,10 @@ export function useScrollReveal(trigger: number | string = 0) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
+            const target = entry.target as HTMLElement;
+            target.classList.add("is-visible");
+            target.dataset.revealObserved = "1";
+            observer.unobserve(target);
           }
         });
       },
@@ -27,8 +31,31 @@ export function useScrollReveal(trigger: number | string = 0) {
       }
     );
 
-    nodes.forEach((node) => observer.observe(node));
+    const observePendingNodes = () => {
+      const nodes = Array.from(document.querySelectorAll<HTMLElement>(selector));
+      nodes.forEach((node) => {
+        if (node.dataset.revealObserved === "1") {
+          return;
+        }
+        node.dataset.revealObserved = "1";
+        observer.observe(node);
+      });
+    };
 
-    return () => observer.disconnect();
+    observePendingNodes();
+
+    const mutationObserver = new MutationObserver(() => {
+      observePendingNodes();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      mutationObserver.disconnect();
+      observer.disconnect();
+    };
   }, [trigger]);
 }
