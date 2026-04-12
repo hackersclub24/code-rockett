@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signInWithPopup } from "firebase/auth";
 
 import { api } from "@/lib/api";
 import { parseJwtPayload, setAccessToken } from "@/lib/auth";
 import { firebaseAuth, googleProvider } from "@/lib/firebase";
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -123,5 +123,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 text-slate-400">Loading…</div>}>
+      <LoginPageInner />
+    </Suspense>
   );
 }

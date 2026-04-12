@@ -1,5 +1,9 @@
+import asyncio
+from pathlib import Path
 from contextlib import asynccontextmanager
 
+from alembic import command
+from alembic.config import Config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
@@ -13,8 +17,18 @@ from app.utils.security import hash_password
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    await run_migrations()
     await seed_admin()
     yield
+
+
+async def run_migrations() -> None:
+    alembic_ini = Path(__file__).resolve().parents[1] / "alembic.ini"
+
+    def upgrade() -> None:
+        command.upgrade(Config(str(alembic_ini)), "head")
+
+    await asyncio.to_thread(upgrade)
 
 
 async def seed_admin() -> None:
