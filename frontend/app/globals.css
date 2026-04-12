@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg-base: #060b1a;
+  --bg-elev: #0c1530;
+  --stroke-soft: rgba(148, 163, 184, 0.2);
+  --glow: rgba(45, 212, 191, 0.12);
+}
+
+body {
+  @apply min-h-screen text-slate-100 antialiased;
+  background:
+    radial-gradient(1000px 500px at 10% -10%, rgba(34, 197, 94, 0.14), transparent 60%),
+    radial-gradient(900px 480px at 95% 0%, rgba(14, 165, 233, 0.12), transparent 58%),
+    linear-gradient(170deg, var(--bg-elev), var(--bg-base) 55%);
+}
+
+.glass {
+  @apply border backdrop-blur-md;
+  border-color: var(--stroke-soft);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.45));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 35px -24px var(--glow);
+}
+
+.panel {
+  @apply rounded-2xl border;
+  border-color: var(--stroke-soft);
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold text-white transition;
+  background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm text-slate-200 transition;
+  border-color: var(--stroke-soft);
+}
+
+.btn-secondary:hover {
+  @apply bg-white/5;
+}
