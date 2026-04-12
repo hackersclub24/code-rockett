@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Syne } from "next/font/google";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import "./globals.css";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-geist-sans" });
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${display.variable}`}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <ThemeToggle />
+        {children}
+      </body>
     </html>
   );
 }

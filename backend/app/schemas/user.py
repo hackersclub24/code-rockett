@@ -16,6 +16,10 @@ class UserLogin(BaseModel):
     password: str
 
 
+class FirebaseLogin(BaseModel):
+    id_token: str = Field(min_length=16)
+
+
 class UserOut(BaseModel):
     id: uuid.UUID
     name: str

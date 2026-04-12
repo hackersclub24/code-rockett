@@ -10,6 +10,13 @@ from app.models.refresh_token import RefreshToken
 from app.models.user import User
 from app.utils.security import create_access_token, hash_password, hash_token, new_refresh_token, utcnow, verify_password
 
+try:
+    from google.auth.transport import requests as grequests
+    from google.oauth2 import id_token as google_id_token
+except Exception:  # pragma: no cover - optional dependency fallback
+    grequests = None
+    google_id_token = None
+
 
 async def register_student(db: AsyncSession, name: str, email: str, password: str, intro: str | None) -> User:
     existing = await db.execute(select(User).where(User.email == email.lower()))
@@ -34,6 +41,53 @@ async def authenticate(db: AsyncSession, email: str, password: str) -> User | No
     user = result.scalar_one_or_none()
     if not user or not verify_password(password, user.password_hash):
         return None
+    return user
+
+
+async def authenticate_firebase(db: AsyncSession, firebase_token: str) -> User | None:
+    s = get_settings()
+    if not s.firebase_project_id:
+        return None
+    if not google_id_token or not grequests:
+        return None
+
+    try:
+        payload = google_id_token.verify_firebase_token(
+            firebase_token,
+            grequests.Request(),
+            audience=s.firebase_project_id,
+        )
+    except Exception:
+        return None
+
+    if not payload:
+        return None
+
+    expected_issuer = f"https://securetoken.google.com/{s.firebase_project_id}"
+    if payload.get("iss") != expected_issuer or payload.get("aud") != s.firebase_project_id:
+        return None
+
+    email = str(payload.get("email") or "").strip().lower()
+    if not email or not payload.get("email_verified"):
+        return None
+
+    existing = await db.execute(select(User).where(User.email == email))
+    user = existing.scalar_one_or_none()
+    if user:
+        return user
+
+    name = str(payload.get("name") or email.split("@")[0]).strip() or "Student"
+    user = User(
+        name=name[:100],
+        email=email,
+        password_hash=hash_password(new_refresh_token()),
+        role="student",
+        status="approved",
+        intro=None,
+    )
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
     return user
 
 

@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     admin_email_seed: str = ""
     admin_password_seed: str = ""
 
+    firebase_project_id: str = "coding-rockett"
+
     @property
     def origins_list(self) -> list[str]:
         return [o.strip() for o in self.allowed_origins.split(",") if o.strip()]

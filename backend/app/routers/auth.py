@@ -7,7 +7,7 @@ from app.config import get_settings
 from app.dependencies.auth import get_current_user
 from app.dependencies.db import get_db
 from app.models.user import User
-from app.schemas.user import TokenResponse, UserCreate, UserLogin, UserOut
+from app.schemas.user import FirebaseLogin, TokenResponse, UserCreate, UserLogin, UserOut
 from app.services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -52,6 +52,20 @@ async def login(
     user = await auth_service.authenticate(db, body.email, body.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    access, raw_refresh = await auth_service.issue_tokens(db, user)
+    _set_refresh_cookie(response, raw_refresh)
+    return TokenResponse(access_token=access)
+
+
+@router.post("/firebase-login", response_model=TokenResponse)
+async def firebase_login(
+    body: FirebaseLogin,
+    response: Response,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> TokenResponse:
+    user = await auth_service.authenticate_firebase(db, body.id_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid Firebase token")
     access, raw_refresh = await auth_service.issue_tokens(db, user)
     _set_refresh_cookie(response, raw_refresh)
     return TokenResponse(access_token=access)
