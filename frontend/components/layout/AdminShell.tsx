@@ -62,19 +62,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/75 backdrop-blur-xl">
+    <div className="min-h-screen px-4 pb-8 pt-5 sm:px-6">
+      <header className="sticky top-4 z-20 panel rounded-2xl">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3">
           <Link href="/admin" className="font-display text-lg font-semibold tracking-tight text-white">
             Admin | Coding Rocket
           </Link>
-          <nav className="flex flex-wrap items-center gap-1 rounded-xl border border-white/10 bg-slate-900/50 p-1 text-sm">
+          <nav className="flex flex-wrap items-center gap-1 rounded-xl border border-white/10 bg-black/10 p-1 text-sm">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className={`rounded-lg px-3 py-2 transition ${
-                  pathname === l.href ? "bg-sky-500/20 text-sky-100" : "text-slate-300 hover:bg-white/5"
+                  pathname === l.href ? "bg-accent text-[#fff7ef]" : "text-slate-300 hover:bg-white/10"
                 }`}
               >
                 {l.label}
@@ -83,14 +83,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => void logout()}
-              className="rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5"
+              className="rounded-lg px-3 py-2 text-slate-300 hover:bg-white/10"
             >
               Log out
             </button>
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-10">{children}</main>
+      <main className="mx-auto max-w-6xl px-2 py-10 sm:px-4">{children}</main>
     </div>
   );
 }

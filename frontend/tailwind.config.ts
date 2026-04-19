@@ -8,8 +8,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: { 950: "#070b14", 900: "#0c1222", 800: "#141c2e" },
-        accent: { DEFAULT: "#5b8cff", dim: "#3d5a9e" },
+        ink: { 950: "#11131d", 900: "#1b2030", 800: "#242b3f" },
+        accent: { DEFAULT: "#df7f35", dim: "#bc5f17" },
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],

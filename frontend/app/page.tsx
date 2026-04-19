@@ -21,27 +21,33 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent/25 via-transparent to-transparent" />
-      <div className="mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 py-20">
-        <p className="mb-3 text-sm font-medium uppercase tracking-widest text-accent">Coding Rocket</p>
-        <h1 className="font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">
-          Learn to ship real software with live classes and guided practice.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg text-slate-300">
-          Register once, browse the course catalog, and request enrollment with clear progression and feedback from
-          your instructor.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link href="/login" className="btn-primary rounded-xl px-6 py-3">
-            Log in to enroll
-          </Link>
+    <div className="relative overflow-hidden px-6 py-16 sm:px-10">
+      <div className="mx-auto min-h-[calc(100vh-8rem)] max-w-6xl">
+        <div className="panel relative overflow-hidden rounded-3xl px-7 py-10 sm:px-12 sm:py-14">
+          <div className="pointer-events-none absolute -right-14 -top-20 h-52 w-52 rounded-full border border-white/15 bg-accent/25 blur-2xl" />
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">Coding Rocket</p>
+          <h1 className="max-w-4xl font-display text-4xl font-semibold leading-tight text-white sm:text-6xl">
+            Build software that works in the real world, not just in tutorials.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg text-slate-300">
+            Live classes, practical assignments, and visible progress tracking so students and instructors can focus on
+            steady outcomes.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link href="/login" className="btn-primary rounded-xl px-7 py-3">
+              Log in to enroll
+            </Link>
+            <Link href="/courses" className="btn-secondary rounded-xl px-7 py-3">
+              Browse catalog
+            </Link>
+          </div>
         </div>
-        <div className="mt-16 grid gap-4 sm:grid-cols-3">
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { t: "Simple registration", d: "Create an account and start exploring courses right away." },
-            { t: "Multiple courses", d: "Choose from a growing catalog of learning tracks." },
-            { t: "Visible progress", d: "Attendance and assignment status tracked for every learner." },
+            { t: "Direct onboarding", d: "Account creation is short, clear, and ready for immediate course browsing." },
+            { t: "Classroom structure", d: "Course flows include attendance, assignments, and admin approvals." },
+            { t: "Progress visibility", d: "Students and staff both get transparent updates on learning status." },
           ].map((x) => (
             <div key={x.t} className="glass rounded-2xl p-5">
               <h3 className="font-medium text-white">{x.t}</h3>
@@ -49,11 +55,12 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
+
         <div className="mt-14">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="font-display text-2xl font-semibold text-white">Course catalog</h2>
-              <p className="mt-2 text-sm text-slate-400">Browse the courses first. You can request enrollment after logging in.</p>
+              <p className="mt-2 text-sm text-slate-400">Preview what is available first, then request enrollment after login.</p>
             </div>
             <Link href="/courses" className="btn-secondary">
               View all courses

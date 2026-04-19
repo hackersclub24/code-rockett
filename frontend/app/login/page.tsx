@@ -66,11 +66,11 @@ function LoginPageInner() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
+    <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-10">
       <Link href="/" className="mb-8 font-display text-xl font-semibold text-white">
         ← Coding Rocket
       </Link>
-      <div className="glass rounded-2xl p-8">
+      <div className="panel rounded-3xl p-8 shadow-2xl shadow-black/20">
         <h1 className="font-display text-2xl font-semibold text-white">Log in</h1>
         <p className="mt-2 text-sm text-slate-400">Use the email and password for your account.</p>
         {success && <p className="mt-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">{success}</p>}
@@ -78,7 +78,7 @@ function LoginPageInner() {
           <div>
             <label className="text-xs font-medium uppercase tracking-wide text-slate-400">Email</label>
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm outline-none ring-accent focus:ring-2"
+              className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm outline-none ring-accent focus:ring-2"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -88,7 +88,7 @@ function LoginPageInner() {
           <div>
             <label className="text-xs font-medium uppercase tracking-wide text-slate-400">Password</label>
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm outline-none ring-accent focus:ring-2"
+              className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm outline-none ring-accent focus:ring-2"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -99,7 +99,7 @@ function LoginPageInner() {
           <button
             type="submit"
             disabled={loading || googleLoading}
-            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-white hover:bg-accent-dim disabled:opacity-50"
+            className="btn-primary w-full py-2.5 disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
@@ -117,7 +117,7 @@ function LoginPageInner() {
         </form>
         <p className="mt-6 text-center text-sm text-slate-400">
           New here?{" "}
-          <Link href="/register" className="text-accent hover:underline">
+          <Link href="/register" className="font-semibold text-accent hover:underline">
             Register
           </Link>
         </p>
