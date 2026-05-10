@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-import { api } from "@/lib/api";
-import type { CourseItem } from "@/types";
+import RocketModel from "@/components/RocketModel";
 
 type Star = {
   x: number;
@@ -98,7 +97,6 @@ function createBurstParticle(x: number, y: number): BurstParticle {
 }
 
 export default function LandingPage() {
-  const [courses, setCourses] = useState<CourseItem[] | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cursorRef = useRef<HTMLDivElement | null>(null);
@@ -110,17 +108,6 @@ export default function LandingPage() {
   const frameRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const canvasSizeRef = useRef({ width: 0, height: 0 });
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        const { data } = await api.get<CourseItem[]>("/courses/catalog");
-        setCourses(data);
-      } catch {
-        setCourses([]);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -396,9 +383,23 @@ export default function LandingPage() {
             <span className="h-2 w-2 rounded-full bg-[#a855f7] shadow-[0_0_24px_rgba(168,85,247,0.9)]" />
             Coding Rocket
           </div>
+          <div className="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
+            <Link href="/" className="transition hover:text-white">
+              Home
+            </Link>
+            <Link href="/courses" className="transition hover:text-white">
+              Courses
+            </Link>
+            <Link href="/dashboard" className="transition hover:text-white">
+              Projects
+            </Link>
+            <Link href="/profile" className="transition hover:text-white">
+              About
+            </Link>
+          </div>
           <div className="hidden items-center gap-3 sm:flex">
             <Link href="/courses" className="btn-secondary rounded-full px-5 py-2.5 text-sm">
-              Courses
+              Explore
             </Link>
             <Link href="/login" className="btn-primary rounded-full px-5 py-2.5 text-sm">
               Sign in
@@ -406,111 +407,116 @@ export default function LandingPage() {
           </div>
         </header>
 
-        <main className="grid items-start gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+        <main className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <section className="max-w-3xl pt-4 sm:pt-10 lg:pt-16">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.32em] text-[#c084fc]">
-              Coding education for ambitious students
-            </p>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc] backdrop-blur-xl">
+              <span className="h-2 w-2 rounded-full bg-[#a855f7]" />
+              Welcome to the future of learning
+            </div>
             <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-5xl lg:text-6xl">
-              Learn to code with a studio that feels modern, structured, and student-first.
+              Coding made
+              <span className="block text-[#c084fc]">simple & easy</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-              Coding Rocket helps students build real projects, develop confidence, and move from curiosity to job-ready
-              fundamentals through guided classes, practical assignments, and clear progress tracking.
+            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+              Master programming with guided classes, hands-on projects, and clear support. From first steps to
+              confident building, everything is presented in a clean, focused flow.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-9 flex flex-wrap gap-4">
               <Link href="/login" className="btn-primary rounded-full px-6 py-3 text-sm sm:px-7">
-                Enroll now
+                Start learning
               </Link>
               <Link href="/courses" className="btn-secondary rounded-full px-6 py-3 text-sm sm:px-7">
-                Explore programs
+                View projects
               </Link>
+            </div>
+
+            <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3">
+              {[
+                { value: "Live", label: "guided classes" },
+                { value: "Build", label: "practical projects" },
+                { value: "Grow", label: "clear support" },
+              ].map((item) => (
+                <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-xl">
+                  <p className="text-lg font-semibold text-white">{item.value}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.24em] text-slate-400">{item.label}</p>
+                </div>
+              ))}
             </div>
           </section>
 
-          <aside className="relative">
-            <div className="glass relative overflow-hidden rounded-[2rem] border border-white/10 p-5 backdrop-blur-2xl sm:p-7">
-              <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#a855f7]/20 blur-3xl" />
-              <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-[#f97316]/10 blur-3xl" />
-              <div className="relative mb-6 h-56 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30">
-                <Image
-                  src="/images/StockCake-Coder's_Neon_World-1904810-standard.jpg"
-                  alt=""
-                  aria-hidden="true"
-                  fill
-                  priority
-                  className="object-cover opacity-90"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Why families choose us</p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                {[
-                  { value: "Live", label: "online classes" },
-                  { value: "Projects", label: "built every term" },
-                  { value: "Support", label: "from instructors" },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                    <p className="text-xl font-semibold text-white sm:text-2xl">{item.value}</p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.24em] text-slate-400">{item.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
-                <p className="text-sm font-medium text-white">What students get</p>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
-                  Structured lessons, hands-on practice, and a clear path from first syntax to confident problem
-                  solving.
-                </p>
-              </div>
+          <aside className="relative flex items-center justify-center">
+            <div className="relative w-full max-w-[540px]">
+              <div className="absolute inset-0 rounded-full bg-[#a855f7]/12 blur-3xl" />
+              <div className="absolute inset-x-10 bottom-6 h-24 rounded-full bg-[#f97316]/10 blur-3xl" />
+              <RocketModel width="100%" height={560} />
             </div>
           </aside>
         </main>
 
-        <section className="grid gap-4 sm:grid-cols-3">
-          {[
-            { t: "Small cohorts", d: "Students get attention, feedback, and enough space to ask questions." },
-            { t: "Project-based learning", d: "Every module ends with something practical they can show." },
-            { t: "Transparent progress", d: "Parents and students can track momentum instead of guessing." },
-          ].map((item) => (
-            <div key={item.t} className="glass rounded-3xl p-5 backdrop-blur-xl">
-              <h3 className="font-medium text-white">{item.t}</h3>
-              <p className="mt-2 text-sm leading-7 text-slate-400">{item.d}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Programs</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A clear path from basics to confidence</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-300">
-              Our curriculum is organized so beginners can start comfortably and returning students can keep
-              building without losing momentum.
+        <section className="pt-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#c084fc]">Featured Projects</p>
+            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-4xl">Explore what students build</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
+              Real work, clear outcomes, and a presentation style that feels calm, modern, and easy to scan.
             </p>
-            <div className="mt-6 space-y-3">
-              {[
-                "Web foundations for HTML, CSS, and JavaScript.",
-                "Full-stack projects that connect frontend and backend skills.",
-                "Interview and portfolio prep for older students ready for the next step.",
-              ].map((line) => (
-                <div key={line} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-                  {line}
-                </div>
-              ))}
-            </div>
           </div>
 
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {[
+              {
+                title: "Live coding class",
+                description: "Guided sessions where students follow along, ask questions, and learn by doing.",
+                image: "/images/StockCake-Code_Teaching_Session-1396074-standard.jpg",
+                tag: "Teaching",
+              },
+              {
+                title: "Neon workspace",
+                description: "A focused workspace designed to keep lessons and projects visually clear.",
+                image: "/images/StockCake-Neon_Developer_Workspace-1527102-standard.jpg",
+                tag: "Workspace",
+              },
+              {
+                title: "Hands-on practice",
+                description: "Short, practical exercises that help students turn concepts into muscle memory.",
+                image: "/images/StockCake-Neon_Coding_Session-465513-standard.jpg",
+                tag: "Practice",
+              },
+            ].map((project) => (
+              <article key={project.title} className="group overflow-hidden rounded-[1.9rem] border border-white/10 bg-white/5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
+                <div className="relative h-72 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070816] via-transparent to-transparent" />
+                  <div className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-[#d8b4fe] backdrop-blur-md">
+                    {project.tag}
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Featured project</p>
+                  <h3 className="mt-2 text-2xl font-semibold text-white">{project.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">{project.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">How it works</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">Simple, guided enrollment</h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Learning path</p>
+            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A simple flow from start to finish</h2>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
               {[
-                { title: "1. Explore", body: "Review classes and find the right starting point." },
-                { title: "2. Enroll", body: "Create an account or sign in to request a seat." },
-                { title: "3. Learn", body: "Join class, submit work, and build consistency." },
+                { title: "1. Explore", body: "Find the right class and understand the starting point." },
+                { title: "2. Build", body: "Follow guided lessons and complete practical exercises." },
+                { title: "3. Show", body: "Finish with something polished enough to present proudly." },
               ].map((item) => (
                 <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-sm font-medium text-white">{item.title}</p>
@@ -519,99 +525,20 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-        </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Outcomes</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">Real-world skills, not just tutorials</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">What students get</p>
+            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">Structured support, without visual clutter</h2>
+            <div className="mt-6 space-y-3">
               {[
-                { metric: "Build", label: "projects with structure" },
-                { metric: "Practice", label: "problem-solving weekly" },
-                { metric: "Present", label: "work with confidence" },
+                "Live instruction with clear pacing.",
+                "Projects that feel current and usable.",
+                "A layout that keeps the focus on content.",
               ].map((item) => (
-                <div key={item.metric} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-2xl font-semibold text-white">{item.metric}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.label}</p>
+                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+                  {item}
                 </div>
               ))}
-            </div>
-          </div>
-
-          <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8 flex flex-col justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Student support</p>
-              <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A team that keeps learners moving</h2>
-              <p className="mt-4 text-sm leading-7 text-slate-300">
-                Instructors keep the pace manageable, explain concepts in plain language, and help students turn
-                mistakes into progress.
-              </p>
-              <div className="mt-6 space-y-3">
-                {[
-                  "Weekly guidance and feedback on assignments.",
-                  "Live help during class sessions.",
-                  "Progress notes that make the next step obvious.",
-                ].map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-8 relative h-56 w-full overflow-hidden rounded-2xl border border-white/10">
-              <Image
-                src="/images/StockCake-Code_Teaching_Session-1396074-standard.jpg"
-                alt=""
-                fill
-                className="object-cover opacity-80"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="pb-2">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Current classes</p>
-              <h2 className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl">See what is available now</h2>
-            </div>
-            <Link href="/courses" className="btn-secondary rounded-full px-5 py-2.5 text-sm">
-              View all
-            </Link>
-          </div>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {!courses && <p className="text-slate-400">Loading courses...</p>}
-            {courses?.map((course) => (
-              <div key={course.id} className="glass rounded-3xl p-5 backdrop-blur-xl">
-                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Course</p>
-                <h3 className="mt-2 text-xl font-semibold text-white">{course.name}</h3>
-                <p className="mt-1 text-sm text-[#d8b4fe]">{course.level ?? "General"}</p>
-                {course.description && <p className="mt-3 text-sm leading-7 text-slate-300">{course.description}</p>}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Ready to begin</p>
-              <h2 className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl">Give your child a stronger start in coding</h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">
-                Join a program that teaches practical skills, keeps progress visible, and makes the learning journey feel
-                organized from day one.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/register" className="btn-primary rounded-full px-6 py-3 text-sm">
-                Create account
-              </Link>
-              <Link href="/login" className="btn-secondary rounded-full px-6 py-3 text-sm">
-                Sign in
-              </Link>
             </div>
           </div>
         </section>
