@@ -18,14 +18,17 @@ type Detail = {
 
 export default function AdminStudentDetailPage() {
   const params = useParams<{ id: string }>();
+  const studentId = typeof params?.id === "string" ? params.id : null;
   const [d, setD] = useState<Detail | null>(null);
 
   useEffect(() => {
+    if (!studentId) return;
+
     void (async () => {
-      const { data } = await api.get<Detail>(`/admin/students/${params.id}`);
+      const { data } = await api.get<Detail>(`/admin/students/${studentId}`);
       setD(data);
     })();
-  }, [params.id]);
+  }, [studentId]);
 
   if (!d) return <p className="text-slate-400">Loading…</p>;
 

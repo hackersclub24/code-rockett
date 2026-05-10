@@ -26,7 +26,7 @@ function LoginPageInner() {
       router.replace("/admin");
       return;
     }
-    const next = searchParams.get("next");
+    const next = searchParams?.get("next");
     if (next && next.startsWith("/")) router.replace(next);
     else router.replace("/dashboard");
   }

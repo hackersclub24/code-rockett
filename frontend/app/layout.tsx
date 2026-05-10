@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Syne } from "next/font/google";
+import { GlobalCursor } from "@/components/layout/GlobalCursor";
+import { SplashScreen } from "@/components/layout/SplashScreen";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import "./globals.css";
 
@@ -15,6 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${display.variable}`}>
       <body className="font-sans">
+        <GlobalCursor />
+        <SplashScreen />
         <ThemeToggle />
         {children}
       </body>

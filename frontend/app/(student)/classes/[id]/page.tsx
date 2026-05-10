@@ -10,19 +10,22 @@ import type { ClassItem } from "@/types";
 
 export default function ClassDetailPage() {
   const params = useParams<{ id: string }>();
+  const classId = typeof params?.id === "string" ? params.id : null;
   const [c, setC] = useState<ClassItem | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!classId) return;
+
     void (async () => {
       try {
-        const { data } = await api.get<ClassItem>(`/classes/${params.id}`);
+        const { data } = await api.get<ClassItem>(`/classes/${classId}`);
         setC(data);
       } catch {
         setError("Class not found or not available.");
       }
     })();
-  }, [params.id]);
+  }, [classId]);
 
   if (error) {
     return (

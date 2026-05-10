@@ -99,6 +99,34 @@ body::before {
   background: var(--btn-secondary-hover);
 }
 
+/* Hide default pointer cursor on interactive elements */
+a, button, [role="button"] {
+  cursor: none;
+}
+
+.theme-toggle {
+  color: var(--text-base);
+  border-color: var(--stroke-strong);
+  background: color-mix(in srgb, var(--panel-bg) 84%, transparent);
+  box-shadow: 0 12px 24px -20px var(--shadow-soft);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+:root[data-theme="light"] .theme-toggle-light {
+  color: #1e1a13;
+  border-color: rgba(68, 57, 40, 0.24);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(240, 232, 216, 0.96));
+}
+
+:root[data-theme="dark"] .theme-toggle-dark {
+  color: #f4f1e8;
+  border-color: rgba(248, 250, 252, 0.22);
+  background: linear-gradient(135deg, rgba(27, 32, 48, 0.92), rgba(36, 43, 63, 0.96));
+}
+
 .btn-google {
   @apply inline-flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition;
   border-color: var(--stroke-strong);
@@ -118,6 +146,23 @@ body::before {
   background: color-mix(in srgb, var(--panel-bg) 74%, white 26%);
 }
 
+:root[data-theme="light"] .btn-secondary {
+  color: #231d13;
+  background: rgba(255, 251, 241, 0.86);
+}
+
+:root[data-theme="light"] .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+:root[data-theme="light"] .btn-primary {
+  color: #fffaf2;
+}
+
+:root[data-theme="light"] a:not(.btn-primary):not(.btn-secondary):not(.theme-toggle) {
+  color: inherit;
+}
+
 :root[data-theme="light"] .text-white {
   color: #231d13 !important;
 }
@@ -131,6 +176,11 @@ body::before {
 
 :root[data-theme="light"] [class*="bg-ink-"] {
   background-color: var(--input-bg) !important;
+}
+
+:root[data-theme="light"] .glass,
+:root[data-theme="light"] .panel {
+  box-shadow: 0 16px 38px -32px rgba(85, 69, 44, 0.22);
 }
 
 :root[data-theme="light"] [class*="border-white/"] {

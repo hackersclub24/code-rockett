@@ -10,31 +10,36 @@ import type { ClassItem, User } from "@/types";
 
 export default function AdminClassAttendancePage() {
   const params = useParams<{ id: string }>();
+  const classId = typeof params?.id === "string" ? params.id : null;
   const [cls, setCls] = useState<ClassItem | null>(null);
   const [students, setStudents] = useState<User[]>([]);
   const [statusByStudent, setStatusByStudent] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (!classId) return;
+
     const [{ data: c }, { data: studs }] = await Promise.all([
-      api.get<ClassItem>(`/admin/classes/${params.id}`),
+      api.get<ClassItem>(`/admin/classes/${classId}`),
       api.get<User[]>("/admin/students", { params: { status: "approved" } }),
     ]);
     setCls(c);
     setStudents(studs);
-  }, [params.id]);
+  }, [classId]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
   async function save() {
+    if (!classId) return;
+
     setMsg(null);
     const marks = students.map((s) => ({
       student_id: s.id,
       status: statusByStudent[s.id] ?? "absent",
     }));
-    await api.post(`/admin/classes/${params.id}/attendance`, { marks });
+    await api.post(`/admin/classes/${classId}/attendance`, { marks });
     setMsg("Attendance saved.");
   }
 

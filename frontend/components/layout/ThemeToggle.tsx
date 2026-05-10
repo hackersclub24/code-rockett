@@ -43,11 +43,17 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="btn-secondary fixed right-4 top-4 z-50 rounded-full px-4 py-2 text-xs font-semibold"
+      className={`theme-toggle fixed right-4 top-4 z-50 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
+        theme === "dark" ? "theme-toggle-dark" : "theme-toggle-light"
+      }`}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-pressed={theme === "light"}
       title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {theme === "dark" ? "Light mode" : "Dark mode"}
+      <span className="text-sm leading-none" aria-hidden="true">
+        {theme === "dark" ? "☀" : "☾"}
+      </span>
+      <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
     </button>
   );
 }

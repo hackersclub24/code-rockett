@@ -9,7 +9,7 @@ import type { User } from "@/types";
 
 function AdminStudentsInner() {
   const search = useSearchParams();
-  const status = search.get("status") ?? undefined;
+  const status = search?.get("status") ?? undefined;
   const [rows, setRows] = useState<User[] | null>(null);
 
   const load = useCallback(async () => {
