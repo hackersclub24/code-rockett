@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import RocketAnimation from "@/components/animations/RocketAnimation";
 
@@ -11,17 +11,19 @@ const MAX_VISIBLE_MS = 6000;
 export function SplashScreen() {
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
+  const exitingRef = useRef(false);
 
   useEffect(() => {
+    const previous = document.body.style.overflow;
     // Manage body overflow based on visible state
     if (visible) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previous || "auto";
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previous || "auto";
     };
   }, [visible]);
 
@@ -35,7 +37,8 @@ export function SplashScreen() {
     let fallbackTimer: number | undefined;
 
     const hideSplash = () => {
-      if (!mounted || exiting) return;
+      if (!mounted || exitingRef.current) return;
+      exitingRef.current = true;
       setExiting(true);
       hideTimer = window.setTimeout(() => {
         if (mounted) setVisible(false);
@@ -58,30 +61,23 @@ export function SplashScreen() {
       tryHide();
     }, MAX_VISIBLE_MS);
 
+    const onLoad = () => {
+      pageLoaded = true;
+      tryHide();
+    };
+
     if (!pageLoaded) {
-      const onLoad = () => {
-        pageLoaded = true;
-        tryHide();
-      };
-
       window.addEventListener("load", onLoad, { once: true });
-
-      return () => {
-        mounted = false;
-        window.clearTimeout(minTimer);
-        window.clearTimeout(fallbackTimer);
-        window.removeEventListener("load", onLoad);
-        if (hideTimer) window.clearTimeout(hideTimer);
-      };
     }
 
     return () => {
       mounted = false;
       window.clearTimeout(minTimer);
       window.clearTimeout(fallbackTimer);
+      if (!pageLoaded) window.removeEventListener("load", onLoad);
       if (hideTimer) window.clearTimeout(hideTimer);
     };
-  }, [exiting]);
+  }, []);
 
   if (!visible) return null;
 

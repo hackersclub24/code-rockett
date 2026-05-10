@@ -373,7 +373,7 @@ export default function LandingPage() {
   return (
     <div
       ref={wrapperRef}
-      className="relative min-h-[calc(100vh-0rem)] cursor-none overflow-hidden bg-[#070816] px-6 py-8 text-white sm:px-10"
+      className="relative min-h-[calc(100vh-0rem)] cursor-none overflow-x-hidden bg-[#070816] px-6 py-8 text-white sm:px-10"
     >
       <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
 
