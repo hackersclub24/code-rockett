@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from pathlib import Path
 from contextlib import asynccontextmanager
 
@@ -15,10 +16,14 @@ from app.routers import admin, assignments, auth, classes, courses, students
 from app.utils.security import hash_password
 
 
+logger = logging.getLogger(__name__)
+STARTUP_TASK_TIMEOUT_SECONDS = 10
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    await run_migrations()
-    await seed_admin()
+    # Migrations and admin seeding are run manually via manage.py, not at startup,
+    # to prevent Uvicorn from hanging if the database is slow or unreachable.
     yield
 
 
