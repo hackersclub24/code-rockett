@@ -36,8 +36,9 @@ export default function DashboardPage() {
             src="/images/StockCake-Students_Learning_Coding-852873-standard.jpg"
             alt=""
             fill
-            className="object-cover opacity-30 mix-blend-luminosity"
+            className="object-cover opacity-30"
             priority
+            sizes="100vw"
           />
         </div>
         <div className="relative z-10 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent p-8 sm:p-10">

@@ -433,7 +433,7 @@ export default function LandingPage() {
             <div className="glass relative overflow-hidden rounded-[2rem] border border-white/10 p-5 backdrop-blur-2xl sm:p-7">
               <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#a855f7]/20 blur-3xl" />
               <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-[#f97316]/10 blur-3xl" />
-              <div className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30">
+              <div className="relative mb-6 h-56 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30">
                 <Image
                   src="/images/StockCake-Coder's_Neon_World-1904810-standard.jpg"
                   alt=""
@@ -441,6 +441,7 @@ export default function LandingPage() {
                   fill
                   priority
                   className="object-cover opacity-90"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Why families choose us</p>
@@ -564,6 +565,7 @@ export default function LandingPage() {
                 alt=""
                 fill
                 className="object-cover opacity-80"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
           </div>

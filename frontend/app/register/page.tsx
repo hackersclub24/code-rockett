@@ -54,12 +54,13 @@ export default function RegisterPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Welcome</p>
             <p className="mt-1 text-sm text-slate-400">Create your account to start browsing courses.</p>
           </div>
-          <div className="relative hidden h-16 w-24 overflow-hidden rounded-xl border border-white/10 sm:block">
+          <div className="relative hidden h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 sm:block">
             <Image
               src="/images/StockCake-Neon_Developer_Workspace-1527102-standard.jpg"
               alt=""
               aria-hidden="true"
               fill
+              priority
               sizes="96px"
               className="object-cover opacity-85"
             />

@@ -106,8 +106,9 @@ export default function CoursesPage() {
             src="/images/StockCake-Coding_in_Neon-1262118-standard.jpg"
             alt=""
             fill
-            className="object-cover opacity-40 mix-blend-overlay"
+            className="object-cover opacity-30"
             priority
+            sizes="100vw"
           />
         </div>
         <div className="relative z-10 bg-gradient-to-r from-[#070816] via-[#070816]/80 to-transparent p-8 sm:p-12">

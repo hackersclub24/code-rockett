@@ -77,12 +77,13 @@ function LoginPageInner() {
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Welcome back</p>
             <p className="mt-1 text-sm text-slate-400">Sign in to view classes and progress.</p>
           </div>
-          <div className="relative hidden h-16 w-24 overflow-hidden rounded-xl border border-white/10 sm:block">
+          <div className="relative hidden h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 sm:block">
             <Image
               src="/images/StockCake-Neon_Coding_Session-465513-standard.jpg"
               alt=""
               aria-hidden="true"
               fill
+              priority
               sizes="96px"
               className="object-cover opacity-85"
             />
