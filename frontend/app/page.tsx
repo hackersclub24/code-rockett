@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import { api } from "@/lib/api";
@@ -432,6 +433,16 @@ export default function LandingPage() {
             <div className="glass relative overflow-hidden rounded-[2rem] border border-white/10 p-5 backdrop-blur-2xl sm:p-7">
               <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#a855f7]/20 blur-3xl" />
               <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-[#f97316]/10 blur-3xl" />
+              <div className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30">
+                <Image
+                  src="/images/StockCake-Coder's_Neon_World-1904810-standard.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  priority
+                  className="object-cover opacity-90"
+                />
+              </div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Why families choose us</p>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {[

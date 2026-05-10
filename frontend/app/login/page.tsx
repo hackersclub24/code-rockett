@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { signInWithPopup } from "firebase/auth";
@@ -71,6 +72,22 @@ function LoginPageInner() {
         ← Coding Rocket
       </Link>
       <div className="panel rounded-3xl p-8 shadow-2xl shadow-black/20">
+        <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Welcome back</p>
+            <p className="mt-1 text-sm text-slate-400">Sign in to view classes and progress.</p>
+          </div>
+          <div className="relative hidden h-16 w-24 overflow-hidden rounded-xl border border-white/10 sm:block">
+            <Image
+              src="/images/StockCake-Neon_Coding_Session-465513-standard.jpg"
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="96px"
+              className="object-cover opacity-85"
+            />
+          </div>
+        </div>
         <h1 className="font-display text-2xl font-semibold text-white">Log in</h1>
         <p className="mt-2 text-sm text-slate-400">Use the email and password for your account.</p>
         {success && <p className="mt-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">{success}</p>}
