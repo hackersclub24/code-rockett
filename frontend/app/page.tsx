@@ -538,23 +538,33 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Student support</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A team that keeps learners moving</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-300">
-              Instructors keep the pace manageable, explain concepts in plain language, and help students turn
-              mistakes into progress.
-            </p>
-            <div className="mt-6 space-y-3">
-              {[
-                "Weekly guidance and feedback on assignments.",
-                "Live help during class sessions.",
-                "Progress notes that make the next step obvious.",
-              ].map((item) => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-                  {item}
-                </div>
-              ))}
+          <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8 flex flex-col justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Student support</p>
+              <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A team that keeps learners moving</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">
+                Instructors keep the pace manageable, explain concepts in plain language, and help students turn
+                mistakes into progress.
+              </p>
+              <div className="mt-6 space-y-3">
+                {[
+                  "Weekly guidance and feedback on assignments.",
+                  "Live help during class sessions.",
+                  "Progress notes that make the next step obvious.",
+                ].map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-8 relative h-56 w-full overflow-hidden rounded-2xl border border-white/10">
+              <Image
+                src="/images/StockCake-Code_Teaching_Session-1396074-standard.jpg"
+                alt=""
+                fill
+                className="object-cover opacity-80"
+              />
             </div>
           </div>
         </section>

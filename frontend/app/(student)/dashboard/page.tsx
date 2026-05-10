@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { api } from "@/lib/api";
@@ -29,9 +30,22 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="font-display text-3xl font-semibold text-white">Dashboard</h1>
-        <p className="mt-2 text-slate-400">Your enrolled courses, upcoming sessions, attendance snapshot, and open work.</p>
+      <div className="overflow-hidden rounded-3xl border border-white/10 relative mb-8">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/StockCake-Students_Learning_Coding-852873-standard.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-30 mix-blend-luminosity"
+            priority
+          />
+        </div>
+        <div className="relative z-10 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent p-8 sm:p-10">
+          <h1 className="font-display text-4xl font-semibold text-white">Dashboard</h1>
+          <p className="mt-2 text-slate-300 max-w-2xl">
+            Your enrolled courses, upcoming sessions, attendance snapshot, and open work.
+          </p>
+        </div>
       </div>
 
       <section className="glass rounded-2xl p-6">
