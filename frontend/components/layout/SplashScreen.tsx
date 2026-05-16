@@ -11,7 +11,23 @@ const MAX_VISIBLE_MS = 6000;
 export function SplashScreen() {
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
+  const [compact, setCompact] = useState(false);
   const exitingRef = useRef(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+
+    const syncCompact = () => {
+      setCompact(mediaQuery.matches);
+    };
+
+    syncCompact();
+    mediaQuery.addEventListener("change", syncCompact);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncCompact);
+    };
+  }, []);
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -84,16 +100,17 @@ export function SplashScreen() {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 z-[80] flex items-center justify-center bg-[#05060d] px-4 py-8 text-white transition-opacity duration-500 ${
+      className={`pointer-events-none fixed inset-0 z-[80] flex items-center justify-center bg-[#05060d] px-3 py-6 text-white transition-opacity duration-500 sm:px-4 sm:py-8 ${
         exiting ? "opacity-0" : "opacity-100"
       }`}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(223,127,53,0.2),transparent_34%),radial-gradient(circle_at_bottom,rgba(255,228,190,0.12),transparent_30%)]" />
-      <div className="relative z-10 w-full max-w-5xl">
-        <RocketAnimation width="100%" height={560} showButton={false} autoLaunch />
-        <div className="mt-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Coding Rocket</p>
-          <p className="mt-2 text-sm text-slate-300">Launching your learning space...</p>
+      <div className="relative z-10 flex w-full max-w-4xl flex-col items-center gap-4">
+        <RocketAnimation width="100%" height={compact ? 380 : 520} showButton={false} autoLaunch />
+        <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-center backdrop-blur-sm sm:px-5 sm:py-2.5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/55 sm:text-xs">
+            Launching your learning space...
+          </p>
         </div>
       </div>
     </div>
