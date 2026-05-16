@@ -454,7 +454,7 @@ export default function LandingPage() {
   return (
     <div
       ref={wrapperRef}
-      className={`relative min-h-[calc(100vh-0rem)] overflow-x-hidden bg-[#070816] px-4 py-6 text-white sm:px-8 sm:py-8 lg:px-10 ${showCursorFx ? "cursor-none" : ""}`}
+      className={`relative min-h-screen overflow-x-hidden bg-[#070816] px-4 py-6 text-white sm:px-8 sm:py-8 lg:px-10 ${showCursorFx ? "cursor-none" : ""}`}
     >
       <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_500px_at_78%_30%,rgba(223,127,53,0.12),transparent_62%),radial-gradient(720px_420px_at_18%_18%,rgba(255,228,190,0.08),transparent_58%),radial-gradient(580px_300px_at_58%_72%,rgba(255,255,255,0.05),transparent_66%)]" />
@@ -471,7 +471,7 @@ export default function LandingPage() {
         <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent" />
       </div>
 
-      <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-8 sm:min-h-[calc(100vh-4rem)] sm:justify-between sm:gap-10">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-3rem)] max-w-7xl flex-col justify-between gap-8 sm:min-h-[calc(100vh-4rem)] sm:gap-10">
         <header className="flex items-center justify-between gap-4">
           <div className="glass inline-flex items-center gap-2 rounded-full px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-accent backdrop-blur-xl sm:gap-3 sm:px-4 sm:text-xs sm:tracking-[0.3em]">
             <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_24px_rgba(223,127,53,0.55)]" />
