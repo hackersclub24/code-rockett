@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import RocketModel from "@/components/RocketModel";
+import { api } from "@/lib/api";
+import { getAccessToken, parseJwtPayload } from "@/lib/auth";
 
 type Star = {
   x: number;
@@ -46,13 +48,90 @@ function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
+function CoursePreview() {
+  type CourseItem = { id: string; name: string; description?: string; is_active?: boolean; level?: string };
+  const [courses, setCourses] = useState<CourseItem[] | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [approvedStudent, setApprovedStudent] = useState(false);
+
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) {
+      setApprovedStudent(false);
+      setAuthReady(true);
+      return;
+    }
+    const payload = parseJwtPayload(token);
+    setApprovedStudent(payload?.role === "student" && payload?.status === "approved");
+    setAuthReady(true);
+  }, []);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const { data } = await api.get<CourseItem[]>('/courses/catalog');
+        setCourses(data.slice(0, 3));
+      } catch (err) {
+        setCourses([]);
+      }
+    })();
+  }, []);
+
+  async function requestEnrollment(courseId: string) {
+    setMessage(null);
+    if (!approvedStudent) {
+      window.location.href = `/login?next=/courses`;
+      return;
+    }
+    setBusyId(courseId);
+    try {
+      await api.post(`/courses/${courseId}/enroll-request`);
+      setMessage('Enrollment request sent.');
+    } catch (e) {
+      setMessage('Could not send request.');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  return (
+    <div className="mx-auto mt-6 max-w-6xl">
+      {message && <p className="mb-4 text-sm text-emerald-400">{message}</p>}
+      {!courses && <p className="text-slate-400">Loading courses...</p>}
+      {courses && courses.length === 0 && <p className="text-slate-500">No courses available right now.</p>}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {courses?.map((course) => (
+          <div key={course.id} className="glass rounded-2xl p-5">
+            <p className="text-xs uppercase tracking-wide text-slate-500">{course.level ?? 'General'}</p>
+            <h3 className="mt-2 text-xl font-semibold text-white">{course.name}</h3>
+            {course.description && <p className="mt-3 text-sm text-slate-300">{course.description}</p>}
+            <div className="mt-4 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => void requestEnrollment(course.id)}
+                disabled={!course.is_active || busyId === course.id}
+                className="btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {busyId === course.id ? 'Sending...' : 'Request enrollment'}
+              </button>
+              <Link href="/courses" className="text-sm text-slate-500">View all</Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function createStar(x: number, y: number, born = false): Star {
   const base = born ? randomBetween(1, 3) : randomBetween(0.4, 2.2);
   const maxAge = born ? Math.floor(randomBetween(80, 200)) : Number.POSITIVE_INFINITY;
   const palette = [
     { color: "#ffffff", weight: 0.85 },
-    { color: "#c084fc", weight: 0.08 },
-    { color: "#f97316", weight: 0.07 },
+    { color: "#ffd8b2", weight: 0.08 },
+    { color: "#df7f35", weight: 0.07 },
   ];
   const roll = Math.random();
   let chosen = palette[0].color;
@@ -79,7 +158,7 @@ function createStar(x: number, y: number, born = false): Star {
 }
 
 function createBurstParticle(x: number, y: number): BurstParticle {
-  const colors = ["#c084fc", "#f97316", "#ffffff"];
+  const colors = ["#df7f35", "#ffd8b2", "#ffffff"];
   const angle = Math.random() * Math.PI * 2;
   const speed = randomBetween(1.5, 6.5);
 
@@ -361,9 +440,10 @@ export default function LandingPage() {
   return (
     <div
       ref={wrapperRef}
-      className="relative min-h-[calc(100vh-0rem)] cursor-none overflow-x-hidden bg-[#070816] px-6 py-8 text-white sm:px-10"
+      className="relative min-h-[calc(100vh-0rem)] cursor-none overflow-x-hidden bg-[#070816] px-4 py-6 text-white sm:px-8 sm:py-8 lg:px-10"
     >
       <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_500px_at_78%_30%,rgba(223,127,53,0.12),transparent_62%),radial-gradient(720px_420px_at_18%_18%,rgba(255,228,190,0.08),transparent_58%),radial-gradient(580px_300px_at_58%_72%,rgba(255,255,255,0.05),transparent_66%)]" />
 
       <div
         ref={cursorRef}
@@ -372,15 +452,15 @@ export default function LandingPage() {
       >
         <div
           ref={cursorRingRef}
-          className="absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#a855f7]/70 transition-transform duration-100"
+          className="absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/20 transition-transform duration-100"
         />
-        <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#a855f7]" />
+        <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col justify-between gap-10">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col justify-between gap-8 sm:gap-10">
         <header className="flex items-center justify-between gap-4">
-          <div className="glass inline-flex items-center gap-3 rounded-full px-4 py-2 text-xs uppercase tracking-[0.3em] text-[#d8b4fe] backdrop-blur-xl">
-            <span className="h-2 w-2 rounded-full bg-[#a855f7] shadow-[0_0_24px_rgba(168,85,247,0.9)]" />
+          <div className="glass inline-flex items-center gap-2 rounded-full px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-accent backdrop-blur-xl sm:gap-3 sm:px-4 sm:text-xs sm:tracking-[0.3em]">
+            <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_24px_rgba(223,127,53,0.55)]" />
             Coding Rocket
           </div>
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
@@ -407,22 +487,31 @@ export default function LandingPage() {
           </div>
         </header>
 
-        <main className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <section className="max-w-3xl pt-4 sm:pt-10 lg:pt-16">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc] backdrop-blur-xl">
-              <span className="h-2 w-2 rounded-full bg-[#a855f7]" />
+        <div className="flex gap-3 sm:hidden">
+          <Link href="/courses" className="btn-secondary flex-1 rounded-full px-4 py-2.5 text-sm">
+            Explore
+          </Link>
+          <Link href="/login" className="btn-primary flex-1 rounded-full px-4 py-2.5 text-sm">
+            Sign in
+          </Link>
+        </div>
+
+        <main className="grid items-center gap-8 sm:gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <section className="max-w-3xl pt-2 sm:pt-10 lg:pt-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-accent backdrop-blur-xl sm:mb-5 sm:px-4 sm:text-xs sm:tracking-[0.28em]">
+              <span className="h-2 w-2 rounded-full bg-accent" />
               Welcome to the future of learning
             </div>
-            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-4xl font-display text-3xl font-semibold leading-[1.04] text-white sm:text-5xl lg:text-6xl">
               Coding made
-              <span className="block text-[#c084fc]">simple & easy</span>
+              <span className="block text-accent">simple & easy</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 sm:mt-6 sm:leading-8 sm:text-lg">
               Master programming with guided classes, hands-on projects, and clear support. From first steps to
               confident building, everything is presented in a clean, focused flow.
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-4">
+            <div className="mt-7 flex flex-wrap gap-3 sm:mt-9 sm:gap-4">
               <Link href="/login" className="btn-primary rounded-full px-6 py-3 text-sm sm:px-7">
                 Start learning
               </Link>
@@ -431,7 +520,7 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid max-w-2xl gap-3 sm:mt-10 sm:grid-cols-3">
               {[
                 { value: "Live", label: "guided classes" },
                 { value: "Build", label: "practical projects" },
@@ -446,17 +535,28 @@ export default function LandingPage() {
           </section>
 
           <aside className="relative flex items-center justify-center">
-            <div className="relative w-full max-w-[540px]">
-              <div className="absolute inset-0 rounded-full bg-[#a855f7]/12 blur-3xl" />
-              <div className="absolute inset-x-10 bottom-6 h-24 rounded-full bg-[#f97316]/10 blur-3xl" />
-              <RocketModel width="100%" height={560} />
+            <div className="relative w-full max-w-[620px]">
+              <div className="absolute -inset-x-12 -inset-y-10 rounded-full bg-accent/14 blur-[88px]" />
+              <div className="absolute inset-x-12 bottom-4 h-28 rounded-full bg-[#ffd8b2]/16 blur-3xl" />
+              <RocketModel width="100%" height="clamp(280px, 70vw, 560px)" showStars={false} />
             </div>
           </aside>
         </main>
 
+        {/* Available courses preview */}
+        <section className="mt-10">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Available Courses</p>
+            <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-4xl">Browse a few open courses</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">See a subset of courses on the homepage — click to view the full catalog or request enrollment.</p>
+          </div>
+
+          <CoursePreview />
+        </section>
+
         <section className="pt-6">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#c084fc]">Featured Projects</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Featured Projects</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-4xl">Explore what students build</h2>
             <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
               Real work, clear outcomes, and a presentation style that feels calm, modern, and easy to scan.
@@ -494,7 +594,7 @@ export default function LandingPage() {
                     sizes="(max-width: 1024px) 100vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#070816] via-transparent to-transparent" />
-                  <div className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-[#d8b4fe] backdrop-blur-md">
+                  <div className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-accent backdrop-blur-md">
                     {project.tag}
                   </div>
                 </div>
@@ -510,7 +610,7 @@ export default function LandingPage() {
 
         <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">Learning path</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Learning path</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A simple flow from start to finish</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
               {[
@@ -527,7 +627,7 @@ export default function LandingPage() {
           </div>
 
           <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c084fc]">What students get</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">What students get</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">Structured support, without visual clutter</h2>
             <div className="mt-6 space-y-3">
               {[

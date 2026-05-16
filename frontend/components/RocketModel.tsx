@@ -5,7 +5,8 @@ import * as THREE from 'three';
 
 interface RocketModelProps {
   width?: string | number;
-  height?: number;
+  height?: string | number;
+  showStars?: boolean;
 }
 
 type FlameParticle = THREE.Mesh & {
@@ -61,7 +62,7 @@ function disposeObject(object: THREE.Object3D) {
   });
 }
 
-export default function RocketModel({ width = '100%', height = 520 }: RocketModelProps) {
+export default function RocketModel({ width = '100%', height = 520, showStars = true }: RocketModelProps) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -177,18 +178,21 @@ export default function RocketModel({ width = '100%', height = 520 }: RocketMode
       flameGroup.add(particle);
     }
 
-    const starVertices: number[] = [];
-    for (let index = 0; index < 300; index += 1) {
-      starVertices.push((Math.random() - 0.5) * 30, (Math.random() - 0.5) * 30, (Math.random() - 0.5) * 30);
-    }
+    let stars: THREE.Points | null = null;
+    if (showStars) {
+      const starVertices: number[] = [];
+      for (let index = 0; index < 300; index += 1) {
+        starVertices.push((Math.random() - 0.5) * 30, (Math.random() - 0.5) * 30, (Math.random() - 0.5) * 30);
+      }
 
-    const starGeometry = new THREE.BufferGeometry();
-    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-    const stars = new THREE.Points(
-      starGeometry,
-      new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.7 }),
-    );
-    scene.add(stars);
+      const starGeometry = new THREE.BufferGeometry();
+      starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+      stars = new THREE.Points(
+        starGeometry,
+        new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.7 }),
+      );
+      scene.add(stars);
+    }
 
     let isDragging = false;
     let prevMouse = { x: 0, y: 0 };
@@ -259,7 +263,9 @@ export default function RocketModel({ width = '100%', height = 520 }: RocketMode
 
       purpleLight.intensity = 2.5 + Math.sin(frame * 0.04) * 0.8;
       orangeLight.intensity = 1.8 + Math.sin(frame * 0.03 + 1) * 0.5;
-      stars.rotation.y += 0.0002;
+      if (stars) {
+        stars.rotation.y += 0.0002;
+      }
 
       flameGroup.children.forEach((child) => {
         const particle = child as FlameParticle;
@@ -303,7 +309,9 @@ export default function RocketModel({ width = '100%', height = 520 }: RocketMode
       window.removeEventListener('pointerup', handlePointerUp);
       mount.removeEventListener('wheel', handleWheel);
       disposeObject(rocketGroup);
-      disposeObject(stars);
+      if (stars) {
+        disposeObject(stars);
+      }
       renderer.dispose();
       if (renderer.domElement.parentNode === mount) {
         mount.removeChild(renderer.domElement);
@@ -316,11 +324,11 @@ export default function RocketModel({ width = '100%', height = 520 }: RocketMode
       ref={mountRef}
       style={{
         width: typeof width === 'number' ? `${width}px` : width,
-        height: `${height}px`,
+        height: typeof height === 'number' ? `${height}px` : height,
         position: 'relative',
-        overflow: 'hidden',
-        borderRadius: '24px',
-        background: '#070816',
+        overflow: 'visible',
+        borderRadius: '0px',
+        background: 'transparent',
         touchAction: 'none',
       }}
       aria-label="Interactive 3D rocket model"

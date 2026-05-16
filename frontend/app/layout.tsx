@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Syne } from "next/font/google";
 import { GlobalCursor } from "@/components/layout/GlobalCursor";
 import { SplashScreen } from "@/components/layout/SplashScreen";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import HeroCanvas from "@/components/animations/HeroCanvas";
 import "./globals.css";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-geist-sans" });
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalCursor />
         <SplashScreen />
         <ThemeToggle />
+        <HeroCanvas />
         {children}
       </body>
     </html>

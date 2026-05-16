@@ -199,3 +199,46 @@ input::placeholder,
 textarea::placeholder {
   color: var(--text-muted);
 }
+
+/* Map legacy utility colors to the current theme so older sections stay visually consistent. */
+:root [class*="bg-white/5"] {
+  background-color: color-mix(in srgb, var(--panel-bg) 72%, transparent) !important;
+}
+
+:root [class*="bg-white/10"] {
+  background-color: color-mix(in srgb, var(--panel-bg) 86%, transparent) !important;
+}
+
+:root [class*="bg-ink-900/40"],
+:root [class*="bg-ink-900/60"],
+:root [class*="bg-ink-900/80"] {
+  background-color: color-mix(in srgb, var(--panel-strong) 90%, var(--bg-base) 10%) !important;
+}
+
+:root [class*="border-white/10"],
+:root [class*="border-white/15"] {
+  border-color: var(--stroke-soft) !important;
+}
+
+:root [class*="text-\[\#c084fc\]"] {
+  color: color-mix(in srgb, var(--primary) 82%, var(--text-base) 18%) !important;
+}
+
+:root [class*="text-\[\#d8b4fe\]"] {
+  color: color-mix(in srgb, var(--primary) 70%, var(--text-base) 30%) !important;
+}
+
+:root [class*="bg-\[\#a855f7\]"] {
+  background-color: color-mix(in srgb, var(--primary) 82%, white 18%) !important;
+}
+
+:root [class*="border-\[\#a855f7\]/70"] {
+  border-color: color-mix(in srgb, var(--primary) 78%, white 22%) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root [class*="bg-white/5"],
+  :root [class*="bg-ink-900/60"] {
+    transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  }
+}
