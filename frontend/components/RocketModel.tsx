@@ -91,40 +91,40 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, 0.15, 6);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    const coolLight = new THREE.PointLight(0x7cc7ff, 3, 18);
-    coolLight.position.set(-3, 3, 3);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.38);
+    const purpleLight = new THREE.PointLight(0xa855f7, 3, 18);
+    purpleLight.position.set(-3, 3, 3);
     const orangeLight = new THREE.PointLight(0xf97316, 2, 18);
     orangeLight.position.set(3, -2, 2);
     const whiteLight = new THREE.DirectionalLight(0xffffff, 0.6);
     whiteLight.position.set(0, 5, 5);
 
-    scene.add(ambientLight, coolLight, orangeLight, whiteLight);
+    scene.add(ambientLight, purpleLight, orangeLight, whiteLight);
 
     const rocketGroup = new THREE.Group();
     rocketGroup.scale.setScalar(0.8);
     rocketGroup.position.y = 0.08;
     scene.add(rocketGroup);
 
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0xe8e8f0, roughness: 0.3, metalness: 0.5 });
-    const noseMat = new THREE.MeshStandardMaterial({ color: 0x7cc7ff, roughness: 0.2, metalness: 0.6 });
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0xf4f1ff, roughness: 0.14, metalness: 0.58 });
+    const noseMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.12, metalness: 0.7 });
     const finMat = new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.3, metalness: 0.4 });
     const windowMat = new THREE.MeshStandardMaterial({
-      color: 0x60a5fa,
-      roughness: 0.1,
-      metalness: 0.1,
-      emissive: 0x1d4ed8,
-      emissiveIntensity: 0.4,
+      color: 0xf6d7ff,
+      roughness: 0.06,
+      metalness: 0.18,
+      emissive: 0x9d4edd,
+      emissiveIntensity: 0.3,
     });
     const nozzleMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.4, metalness: 0.8 });
     const ringMat = new THREE.MeshStandardMaterial({
-      color: 0x9ad9ff,
-      roughness: 0.2,
-      metalness: 0.7,
-      emissive: 0x2563eb,
-      emissiveIntensity: 0.3,
+      color: 0xc084fc,
+      roughness: 0.1,
+      metalness: 0.82,
+      emissive: 0x7c3aed,
+      emissiveIntensity: 0.4,
     });
-    const rimMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.2, metalness: 0.9 });
+    const rimMat = new THREE.MeshStandardMaterial({ color: 0xf0e9ff, roughness: 0.2, metalness: 0.9 });
 
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.42, 2.2, 32), bodyMat);
     body.position.y = 0;
@@ -271,8 +271,8 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
       camera.position.set(0, 0.15, zoom);
       camera.lookAt(0, 0, 0);
 
-      coolLight.intensity = 2.3 + Math.sin(frame * 0.04) * 0.7;
-      orangeLight.intensity = 1.8 + Math.sin(frame * 0.03 + 1) * 0.5;
+      purpleLight.intensity = 2.7 + Math.sin(frame * 0.04) * 0.8;
+      orangeLight.intensity = 1.9 + Math.sin(frame * 0.03 + 1) * 0.5;
       if (stars) {
         stars.rotation.y += 0.0002;
       }
