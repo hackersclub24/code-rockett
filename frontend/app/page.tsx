@@ -177,6 +177,7 @@ function createBurstParticle(x: number, y: number): BurstParticle {
 
 export default function LandingPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [showCursorFx, setShowCursorFx] = useState(true);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cursorRef = useRef<HTMLDivElement | null>(null);
@@ -196,6 +197,10 @@ export default function LandingPage() {
     const cursorRing = cursorRingRef.current;
 
     if (!wrapper || !canvas || !cursor || !cursorRing) return;
+
+    const isTouchLike =
+      window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(hover: none)").matches;
+    setShowCursorFx(!isTouchLike);
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -276,7 +281,7 @@ export default function LandingPage() {
         const alpha = (index / trails.length) * 0.12;
 
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+        ctx.strokeStyle = `rgba(124, 199, 255, ${alpha})`;
         ctx.lineWidth = 1.5;
         ctx.moveTo(previous.x, previous.y);
         ctx.lineTo(current.x, current.y);
@@ -289,8 +294,8 @@ export default function LandingPage() {
 
       const { x, y } = cursorStateRef.current;
       const gradient = ctx.createRadialGradient(x, y, 0, x, y, 90);
-      gradient.addColorStop(0, "rgba(124, 58, 237, 0.07)");
-      gradient.addColorStop(1, "rgba(124, 58, 237, 0)");
+      gradient.addColorStop(0, "rgba(124, 199, 255, 0.08)");
+      gradient.addColorStop(1, "rgba(124, 199, 255, 0)");
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(x, y, 90, 0, Math.PI * 2);
@@ -387,7 +392,7 @@ export default function LandingPage() {
             const alpha = (index / particle.trail.length) * particle.life * 0.4;
 
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+            ctx.strokeStyle = `rgba(217, 119, 42, ${alpha})`;
             ctx.lineWidth = 1;
             ctx.moveTo(previous.x, previous.y);
             ctx.lineTo(current.x, current.y);
@@ -417,22 +422,30 @@ export default function LandingPage() {
     };
 
     resizeCanvas();
-    cursorStateRef.current.inside = true;
-    updateCursor(canvasSizeRef.current.width / 2, canvasSizeRef.current.height / 2);
+    cursorStateRef.current.inside = !isTouchLike;
+    if (!isTouchLike) {
+      updateCursor(canvasSizeRef.current.width / 2, canvasSizeRef.current.height / 2);
+    }
     animate();
 
-    document.addEventListener("mousemove", handlePointerMove);
+    if (!isTouchLike) {
+      document.addEventListener("mousemove", handlePointerMove);
+    }
     window.addEventListener("resize", resizeCanvas);
 
     const originalCursor = document.body.style.cursor;
-    document.body.style.cursor = "none";
+    if (!isTouchLike) {
+      document.body.style.cursor = "none";
+    }
 
     return () => {
       if (rafRef.current) {
         window.cancelAnimationFrame(rafRef.current);
       }
 
-      document.removeEventListener("mousemove", handlePointerMove);
+      if (!isTouchLike) {
+        document.removeEventListener("mousemove", handlePointerMove);
+      }
       window.removeEventListener("resize", resizeCanvas);
       document.body.style.cursor = originalCursor;
     };
@@ -441,14 +454,14 @@ export default function LandingPage() {
   return (
     <div
       ref={wrapperRef}
-      className="relative min-h-[calc(100vh-0rem)] cursor-none overflow-x-hidden bg-[#070816] px-4 py-6 text-white sm:px-8 sm:py-8 lg:px-10"
+      className={`relative min-h-[calc(100vh-0rem)] overflow-x-hidden bg-[#070816] px-4 py-6 text-white sm:px-8 sm:py-8 lg:px-10 ${showCursorFx ? "cursor-none" : ""}`}
     >
       <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_500px_at_78%_30%,rgba(223,127,53,0.12),transparent_62%),radial-gradient(720px_420px_at_18%_18%,rgba(255,228,190,0.08),transparent_58%),radial-gradient(580px_300px_at_58%_72%,rgba(255,255,255,0.05),transparent_66%)]" />
 
       <div
         ref={cursorRef}
-        className="pointer-events-none fixed left-0 top-0 z-50 opacity-100 transition-opacity duration-150"
+        className={`pointer-events-none fixed left-0 top-0 z-50 opacity-100 transition-opacity duration-150 ${showCursorFx ? "" : "hidden"}`}
         style={{ transform: "translate(-50%, -50%)", opacity: 1 }}
       >
         <div
@@ -567,7 +580,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          <aside className="relative flex items-center justify-center">
+          <aside className="relative hidden items-center justify-center md:flex">
             <div className="relative w-full max-w-[520px] sm:max-w-[620px]">
               <div className="absolute -inset-x-12 -inset-y-10 rounded-full bg-accent/14 blur-[88px]" />
               <div className="absolute inset-x-12 bottom-4 h-28 rounded-full bg-[#ffd8b2]/16 blur-3xl" />

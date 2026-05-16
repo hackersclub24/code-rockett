@@ -92,14 +92,14 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
     camera.position.set(0, 0.15, 6);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    const purpleLight = new THREE.PointLight(0xa855f7, 3, 18);
-    purpleLight.position.set(-3, 3, 3);
+    const coolLight = new THREE.PointLight(0x7cc7ff, 3, 18);
+    coolLight.position.set(-3, 3, 3);
     const orangeLight = new THREE.PointLight(0xf97316, 2, 18);
     orangeLight.position.set(3, -2, 2);
     const whiteLight = new THREE.DirectionalLight(0xffffff, 0.6);
     whiteLight.position.set(0, 5, 5);
 
-    scene.add(ambientLight, purpleLight, orangeLight, whiteLight);
+    scene.add(ambientLight, coolLight, orangeLight, whiteLight);
 
     const rocketGroup = new THREE.Group();
     rocketGroup.scale.setScalar(0.8);
@@ -107,7 +107,7 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
     scene.add(rocketGroup);
 
     const bodyMat = new THREE.MeshStandardMaterial({ color: 0xe8e8f0, roughness: 0.3, metalness: 0.5 });
-    const noseMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.2, metalness: 0.6 });
+    const noseMat = new THREE.MeshStandardMaterial({ color: 0x7cc7ff, roughness: 0.2, metalness: 0.6 });
     const finMat = new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.3, metalness: 0.4 });
     const windowMat = new THREE.MeshStandardMaterial({
       color: 0x60a5fa,
@@ -118,10 +118,10 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
     });
     const nozzleMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.4, metalness: 0.8 });
     const ringMat = new THREE.MeshStandardMaterial({
-      color: 0xc084fc,
+      color: 0x9ad9ff,
       roughness: 0.2,
       metalness: 0.7,
-      emissive: 0x7c3aed,
+      emissive: 0x2563eb,
       emissiveIntensity: 0.3,
     });
     const rimMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.2, metalness: 0.9 });
@@ -271,7 +271,7 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
       camera.position.set(0, 0.15, zoom);
       camera.lookAt(0, 0, 0);
 
-      purpleLight.intensity = 2.5 + Math.sin(frame * 0.04) * 0.8;
+      coolLight.intensity = 2.3 + Math.sin(frame * 0.04) * 0.7;
       orangeLight.intensity = 1.8 + Math.sin(frame * 0.03 + 1) * 0.5;
       if (stars) {
         stars.rotation.y += 0.0002;

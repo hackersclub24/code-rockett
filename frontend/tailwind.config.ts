@@ -9,7 +9,7 @@ const config: Config = {
     extend: {
       colors: {
         ink: { 950: "#11131d", 900: "#1b2030", 800: "#242b3f" },
-        accent: { DEFAULT: "#df7f35", dim: "#bc5f17" },
+        accent: { DEFAULT: "#d9772a", dim: "#b36425" },
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],

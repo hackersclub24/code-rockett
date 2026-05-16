@@ -15,8 +15,8 @@
   --text-muted: #ad9f87;
   --panel-bg: rgba(27, 32, 48, 0.85);
   --panel-strong: rgba(36, 43, 63, 0.96);
-  --primary: #df7f35;
-  --primary-strong: #bc5f17;
+  --primary: #d9772a;
+  --primary-strong: #b36425;
   --primary-contrast: #fef7ef;
   --btn-secondary-hover: rgba(248, 250, 252, 0.08);
   --input-bg: rgba(12, 15, 24, 0.72);
@@ -35,8 +35,8 @@
   --text-muted: #7d6a4d;
   --panel-bg: rgba(255, 251, 241, 0.9);
   --panel-strong: rgba(255, 251, 241, 0.98);
-  --primary: #c45f18;
-  --primary-strong: #9f4a10;
+  --primary: #bb611d;
+  --primary-strong: #964a14;
   --primary-contrast: #fffaf2;
   --btn-secondary-hover: rgba(68, 57, 40, 0.06);
   --input-bg: rgba(255, 251, 241, 0.95);
@@ -99,9 +99,11 @@ body::before {
   background: var(--btn-secondary-hover);
 }
 
-/* Hide default pointer cursor on interactive elements */
-a, button, [role="button"] {
-  cursor: none;
+/* Hide default pointer cursor only on desktop pointer devices. */
+@media (hover: hover) and (pointer: fine) {
+  a, button, [role="button"] {
+    cursor: none;
+  }
 }
 
 .theme-toggle {
