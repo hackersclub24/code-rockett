@@ -44,7 +44,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="relative mx-auto flex min-h-screen w-full max-w-6xl items-center px-4 pb-8 pt-20 sm:px-6 sm:py-10 lg:px-8 lg:py-8">
+    <div className="relative flex min-h-screen w-full items-center px-4 pb-8 pt-20 sm:px-6 sm:py-10 lg:px-8 lg:py-8">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-24 top-12 h-64 w-64 rounded-full bg-accent/15 blur-3xl animate-pulse" />
         <div className="absolute -right-20 bottom-4 h-72 w-72 rounded-full bg-white/10 blur-3xl" />

@@ -62,9 +62,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen px-4 pb-8 pt-5 sm:px-6">
+    <div className="min-h-screen px-4 pb-8 pt-5 sm:px-6 lg:px-8">
       <header className="sticky top-4 z-20 panel rounded-2xl">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/admin" className="font-display text-lg font-semibold tracking-tight text-white">
             Admin | Coding Rocket
           </Link>
@@ -90,7 +90,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-2 py-10 sm:px-4">{children}</main>
+      <main className="w-full px-2 py-10 sm:px-4 lg:px-6">{children}</main>
     </div>
   );
 }

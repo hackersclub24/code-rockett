@@ -97,7 +97,7 @@ function CoursePreview() {
   }
 
   return (
-    <div className="mx-auto mt-5 max-w-6xl sm:mt-6">
+    <div className="mt-5 w-full sm:mt-6">
       {message && <p className="mb-4 text-sm text-emerald-400">{message}</p>}
       {!courses && <p className="text-slate-400">Loading courses...</p>}
       {courses && courses.length === 0 && <p className="text-slate-500">No courses available right now.</p>}

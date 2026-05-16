@@ -99,7 +99,7 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className="mx-auto min-h-screen max-w-6xl px-6 py-16">
+    <div className="min-h-screen w-full px-6 py-16 lg:px-8">
       <div className="mb-10 overflow-hidden rounded-3xl border border-white/10 relative">
         <div className="absolute inset-0 z-0">
           <Image
