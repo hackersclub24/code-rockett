@@ -97,22 +97,22 @@ function CoursePreview() {
   }
 
   return (
-    <div className="mx-auto mt-6 max-w-6xl">
+    <div className="mx-auto mt-5 max-w-6xl sm:mt-6">
       {message && <p className="mb-4 text-sm text-emerald-400">{message}</p>}
       {!courses && <p className="text-slate-400">Loading courses...</p>}
       {courses && courses.length === 0 && <p className="text-slate-500">No courses available right now.</p>}
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {courses?.map((course) => (
-          <div key={course.id} className="glass rounded-2xl p-5">
+          <div key={course.id} className="glass rounded-2xl p-4 sm:p-5">
             <p className="text-xs uppercase tracking-wide text-slate-500">{course.level ?? 'General'}</p>
-            <h3 className="mt-2 text-xl font-semibold text-white">{course.name}</h3>
+            <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">{course.name}</h3>
             {course.description && <p className="mt-3 text-sm text-slate-300">{course.description}</p>}
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={() => void requestEnrollment(course.id)}
                 disabled={!course.is_active || busyId === course.id}
-                className="btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-primary px-4 py-2.5 text-xs sm:text-sm disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busyId === course.id ? 'Sending...' : 'Request enrollment'}
               </button>
@@ -544,26 +544,26 @@ export default function LandingPage() {
         </main>
 
         {/* Available courses preview */}
-        <section className="mt-10">
+        <section className="mt-8 sm:mt-10">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Available Courses</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.3em]">Available Courses</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-4xl">Browse a few open courses</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">See a subset of courses on the homepage — click to view the full catalog or request enrollment.</p>
+            <p className="mt-3 text-sm leading-6 text-slate-300 sm:mt-4 sm:leading-7 sm:text-base">See a subset of courses on the homepage - click to view the full catalog or request enrollment.</p>
           </div>
 
           <CoursePreview />
         </section>
 
-        <section className="pt-6">
+        <section className="pt-4 sm:pt-6">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Featured Projects</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.3em]">Featured Projects</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-4xl">Explore what students build</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
+            <p className="mt-3 text-sm leading-6 text-slate-300 sm:mt-4 sm:leading-7 sm:text-base">
               Real work, clear outcomes, and a presentation style that feels calm, modern, and easy to scan.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+          <div className="mt-7 grid gap-4 sm:mt-10 sm:gap-5 lg:grid-cols-3">
             {[
               {
                 title: "Live coding class",
@@ -584,8 +584,8 @@ export default function LandingPage() {
                 tag: "Practice",
               },
             ].map((project) => (
-              <article key={project.title} className="group overflow-hidden rounded-[1.9rem] border border-white/10 bg-white/5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
-                <div className="relative h-72 overflow-hidden">
+              <article key={project.title} className="group overflow-hidden rounded-[1.55rem] border border-white/10 bg-white/5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 sm:rounded-[1.9rem]">
+                <div className="relative h-60 overflow-hidden sm:h-72">
                   <Image
                     src={project.image}
                     alt={project.title}
@@ -594,31 +594,31 @@ export default function LandingPage() {
                     sizes="(max-width: 1024px) 100vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#070816] via-transparent to-transparent" />
-                  <div className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-accent backdrop-blur-md">
+                  <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-accent backdrop-blur-md sm:left-5 sm:top-5 sm:text-[0.65rem] sm:tracking-[0.3em]">
                     {project.tag}
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-5 sm:p-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Featured project</p>
-                  <h3 className="mt-2 text-2xl font-semibold text-white">{project.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">{project.description}</p>
+                  <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">{project.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-300 sm:leading-7">{project.description}</p>
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Learning path</p>
+        <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="glass rounded-[1.6rem] p-5 backdrop-blur-xl sm:rounded-[2rem] sm:p-8">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.28em]">Learning path</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">A simple flow from start to finish</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4 sm:grid-cols-3">
               {[
                 { title: "1. Explore", body: "Find the right class and understand the starting point." },
                 { title: "2. Build", body: "Follow guided lessons and complete practical exercises." },
                 { title: "3. Show", body: "Finish with something polished enough to present proudly." },
               ].map((item) => (
-                <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-3.5 sm:p-4">
                   <p className="text-sm font-medium text-white">{item.title}</p>
                   <p className="mt-2 text-sm leading-6 text-slate-400">{item.body}</p>
                 </div>
@@ -626,16 +626,16 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="glass rounded-[2rem] p-6 backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">What students get</p>
+          <div className="glass rounded-[1.6rem] p-5 backdrop-blur-xl sm:rounded-[2rem] sm:p-8">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.28em]">What students get</p>
             <h2 className="mt-3 font-display text-2xl font-semibold text-white sm:text-3xl">Structured support, without visual clutter</h2>
-            <div className="mt-6 space-y-3">
+            <div className="mt-5 space-y-2.5 sm:mt-6 sm:space-y-3">
               {[
                 "Live instruction with clear pacing.",
                 "Projects that feel current and usable.",
                 "A layout that keeps the focus on content.",
               ].map((item) => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-300 sm:py-3">
                   {item}
                 </div>
               ))}
