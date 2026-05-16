@@ -471,7 +471,7 @@ export default function LandingPage() {
         <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col justify-between gap-8 sm:gap-10">
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-8 sm:min-h-[calc(100vh-4rem)] sm:justify-between sm:gap-10">
         <header className="flex items-center justify-between gap-4">
           <div className="glass inline-flex items-center gap-2 rounded-full px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-accent backdrop-blur-xl sm:gap-3 sm:px-4 sm:text-xs sm:tracking-[0.3em]">
             <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_24px_rgba(223,127,53,0.55)]" />
@@ -530,23 +530,22 @@ export default function LandingPage() {
             <Link href="/profile" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
               About
             </Link>
+            <div className="my-1 h-px bg-white/10" />
+            <Link href="/courses" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
+              Explore
+            </Link>
+            <Link href="/login" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-accent hover:bg-white/10">
+              Sign in
+            </Link>
           </nav>
         )}
 
-        <div className="flex gap-3 sm:hidden">
-          <Link href="/courses" className="btn-secondary flex-1 rounded-full px-4 py-2.5 text-sm">
-            Explore
-          </Link>
-          <Link href="/login" className="btn-primary flex-1 rounded-full px-4 py-2.5 text-sm">
-            Sign in
-          </Link>
-        </div>
-
         <main className="grid items-center gap-8 sm:gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <section className="max-w-3xl pt-2 sm:pt-10 lg:pt-16">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-accent backdrop-blur-xl sm:mb-5 sm:px-4 sm:text-xs sm:tracking-[0.28em]">
+          <section className="max-w-3xl pt-1 sm:pt-10 lg:pt-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent backdrop-blur-xl sm:mb-5 sm:px-4 sm:text-xs sm:tracking-[0.28em]">
               <span className="h-2 w-2 rounded-full bg-accent" />
-              Welcome to the future of learning
+              <span className="sm:hidden">Future-ready learning</span>
+              <span className="hidden sm:inline">Welcome to the future of learning</span>
             </div>
             <h1 className="max-w-4xl font-display text-3xl font-semibold leading-[1.04] text-white sm:text-5xl lg:text-6xl">
               Coding made
@@ -557,11 +556,11 @@ export default function LandingPage() {
               confident building, everything is presented in a clean, focused flow.
             </p>
 
-            <div className="mt-7 flex flex-wrap gap-3 sm:mt-9 sm:gap-4">
-              <Link href="/login" className="btn-primary rounded-full px-6 py-3 text-sm sm:px-7">
+            <div className="mt-6 flex flex-wrap gap-3 sm:mt-9 sm:gap-4">
+              <Link href="/login" className="btn-primary w-full rounded-full px-6 py-3 text-sm sm:w-auto sm:px-7">
                 Start learning
               </Link>
-              <Link href="/courses" className="btn-secondary rounded-full px-6 py-3 text-sm sm:px-7">
+              <Link href="/courses" className="btn-secondary w-full rounded-full px-6 py-3 text-sm sm:w-auto sm:px-7">
                 View projects
               </Link>
             </div>
