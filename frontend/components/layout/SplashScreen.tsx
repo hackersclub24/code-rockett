@@ -100,11 +100,15 @@ export function SplashScreen() {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 z-[80] flex items-center justify-center bg-[#05060d] px-3 py-6 text-white transition-opacity duration-500 sm:px-4 sm:py-8 ${
+      className={`pointer-events-none fixed inset-0 z-[80] flex items-center justify-center px-3 py-6 text-white transition-opacity duration-500 sm:px-4 sm:py-8 ${
         exiting ? "opacity-0" : "opacity-100"
       }`}
+      style={{
+        background: "linear-gradient(135deg, #0a0e27 0%, #1a1a4d 25%, #0d1b3d 50%, #1a1a4d 75%, #0a0e27 100%)",
+        backgroundSize: "400% 400%",
+      }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(223,127,53,0.2),transparent_34%),radial-gradient(circle_at_bottom,rgba(255,228,190,0.12),transparent_30%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(139,92,246,0.15),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(59,130,246,0.1),transparent_50%)]" />
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center gap-4">
         <RocketAnimation width="100%" height={compact ? 380 : 520} showButton={false} autoLaunch />
         <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-center backdrop-blur-sm sm:px-5 sm:py-2.5">
