@@ -8,6 +8,68 @@ const MIN_VISIBLE_MS = 2200;
 const FADE_OUT_MS = 450;
 const MAX_VISIBLE_MS = 6000;
 
+function StarField() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const setCanvasSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    setCanvasSize();
+
+    // Create stars
+    const stars = Array.from({ length: 200 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 1.5,
+      opacity: Math.random() * 0.5 + 0.5,
+      twinkleSpeed: Math.random() * 0.03 + 0.01,
+      twinkleOffset: Math.random() * Math.PI * 2,
+    }));
+
+    let frame = 0;
+
+    const animate = () => {
+      ctx.fillStyle = "#05060d";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach((star) => {
+        const twinkle = Math.sin(frame * star.twinkleSpeed + star.twinkleOffset);
+        const alpha = star.opacity + twinkle * 0.3;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.globalAlpha = Math.max(0.1, alpha);
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+      frame++;
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    const handleResize = () => setCanvasSize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0" aria-hidden />;
+}
+
 export function SplashScreen() {
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
@@ -100,15 +162,11 @@ export function SplashScreen() {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 z-[80] flex items-center justify-center px-3 py-6 text-white transition-opacity duration-500 sm:px-4 sm:py-8 ${
+      className={`pointer-events-none fixed inset-0 z-[80] flex items-center justify-center bg-[#05060d] px-3 py-6 text-white transition-opacity duration-500 sm:px-4 sm:py-8 ${
         exiting ? "opacity-0" : "opacity-100"
       }`}
-      style={{
-        background: "linear-gradient(135deg, #0a0e27 0%, #1a1a4d 25%, #0d1b3d 50%, #1a1a4d 75%, #0a0e27 100%)",
-        backgroundSize: "400% 400%",
-      }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(139,92,246,0.15),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(59,130,246,0.1),transparent_50%)]" />
+      <StarField />
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center gap-4">
         <RocketAnimation width="100%" height={compact ? 380 : 520} showButton={false} autoLaunch />
         <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-center backdrop-blur-sm sm:px-5 sm:py-2.5">
