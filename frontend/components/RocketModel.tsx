@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 interface RocketModelProps {
   width?: string | number;
   height?: string | number;
   showStars?: boolean;
+  mobileOptimized?: boolean;
 }
 
 type FlameParticle = THREE.Mesh & {
@@ -62,18 +63,26 @@ function disposeObject(object: THREE.Object3D) {
   });
 }
 
-export default function RocketModel({ width = '100%', height = 520, showStars = true }: RocketModelProps) {
+export default function RocketModel({ width = '100%', height = 520, showStars = true, mobileOptimized = true }: RocketModelProps) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [interactive, setInteractive] = useState(true);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const isNarrowScreen = window.matchMedia('(max-width: 768px)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lowPowerMode = mobileOptimized && (isCoarsePointer || isNarrowScreen || prefersReducedMotion);
+    const nextInteractive = !lowPowerMode;
+    setInteractive(nextInteractive);
+
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x070816, 8, 20);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, lowPowerMode ? 1.1 : 2));
     renderer.setClearColor(0x000000, 0);
     renderer.shadowMap.enabled = true;
     (renderer as THREE.WebGLRenderer & { outputEncoding: number }).outputEncoding = (THREE as any).sRGBEncoding;
@@ -159,7 +168,8 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
     rocketGroup.add(flameGroup);
 
     const flameColors = [0xf97316, 0xfbbf24, 0xfb923c, 0xef4444, 0xfde68a];
-    for (let index = 0; index < 40; index += 1) {
+    const flameParticleCount = lowPowerMode ? 14 : 40;
+    for (let index = 0; index < flameParticleCount; index += 1) {
       const geometry = new THREE.SphereGeometry(Math.random() * 0.08 + 0.03, 6, 6);
       const material = new THREE.MeshBasicMaterial({
         color: flameColors[Math.floor(Math.random() * flameColors.length)],
@@ -252,7 +262,7 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
 
       rotX = THREE.MathUtils.clamp(rotX + rotVel.x, -0.8, 0.9);
       rotY += rotVel.y;
-      autoSpin += 0.005;
+      autoSpin += lowPowerMode ? 0.0034 : 0.005;
 
       rocketGroup.rotation.x = rotX;
       rocketGroup.rotation.y = rotY + autoSpin;
@@ -293,21 +303,27 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
 
     resize();
     window.addEventListener('resize', resize);
-    mount.addEventListener('pointerdown', handlePointerDown);
-    mount.addEventListener('pointermove', updatePointer);
-    window.addEventListener('pointerup', handlePointerUp);
-    mount.addEventListener('wheel', handleWheel, { passive: false });
-    mount.style.cursor = 'grab';
+    if (nextInteractive) {
+      mount.addEventListener('pointerdown', handlePointerDown);
+      mount.addEventListener('pointermove', updatePointer);
+      window.addEventListener('pointerup', handlePointerUp);
+      mount.addEventListener('wheel', handleWheel, { passive: false });
+      mount.style.cursor = 'grab';
+    } else {
+      mount.style.cursor = 'default';
+    }
 
     animate();
 
     return () => {
       window.cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
-      mount.removeEventListener('pointerdown', handlePointerDown);
-      mount.removeEventListener('pointermove', updatePointer);
-      window.removeEventListener('pointerup', handlePointerUp);
-      mount.removeEventListener('wheel', handleWheel);
+      if (nextInteractive) {
+        mount.removeEventListener('pointerdown', handlePointerDown);
+        mount.removeEventListener('pointermove', updatePointer);
+        window.removeEventListener('pointerup', handlePointerUp);
+        mount.removeEventListener('wheel', handleWheel);
+      }
       disposeObject(rocketGroup);
       if (stars) {
         disposeObject(stars);
@@ -317,7 +333,7 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
         mount.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [showStars, mobileOptimized]);
 
   return (
     <div
@@ -329,7 +345,7 @@ export default function RocketModel({ width = '100%', height = 520, showStars = 
         overflow: 'visible',
         borderRadius: '0px',
         background: 'transparent',
-        touchAction: 'none',
+        touchAction: interactive ? 'none' : 'pan-y',
       }}
       aria-label="Interactive 3D rocket model"
     />

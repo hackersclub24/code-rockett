@@ -568,10 +568,10 @@ export default function LandingPage() {
           </section>
 
           <aside className="relative flex items-center justify-center">
-            <div className="relative w-full max-w-[620px]">
+            <div className="relative w-full max-w-[520px] sm:max-w-[620px]">
               <div className="absolute -inset-x-12 -inset-y-10 rounded-full bg-accent/14 blur-[88px]" />
               <div className="absolute inset-x-12 bottom-4 h-28 rounded-full bg-[#ffd8b2]/16 blur-3xl" />
-              <RocketModel width="100%" height="clamp(280px, 70vw, 560px)" showStars={false} />
+              <RocketModel width="100%" height="clamp(220px, 62vw, 560px)" showStars={false} mobileOptimized />
             </div>
           </aside>
         </main>
