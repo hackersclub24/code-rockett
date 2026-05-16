@@ -176,6 +176,7 @@ function createBurstParticle(x: number, y: number): BurstParticle {
 }
 
 export default function LandingPage() {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cursorRef = useRef<HTMLDivElement | null>(null);
@@ -485,7 +486,39 @@ export default function LandingPage() {
               Sign in
             </Link>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setMobileNavOpen((open) => !open)}
+            className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 md:hidden"
+            aria-expanded={mobileNavOpen}
+            aria-controls="mobile-main-nav"
+            aria-label="Toggle menu"
+          >
+            {mobileNavOpen ? "Close" : "Menu"}
+          </button>
         </header>
+
+        {mobileNavOpen && (
+          <nav
+            id="mobile-main-nav"
+            className="glass grid gap-2 rounded-2xl border border-white/10 bg-white/5 p-3 md:hidden"
+            aria-label="Mobile"
+          >
+            <Link href="/" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
+              Home
+            </Link>
+            <Link href="/courses" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
+              Courses
+            </Link>
+            <Link href="/dashboard" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
+              Projects
+            </Link>
+            <Link href="/profile" onClick={() => setMobileNavOpen(false)} className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
+              About
+            </Link>
+          </nav>
+        )}
 
         <div className="flex gap-3 sm:hidden">
           <Link href="/courses" className="btn-secondary flex-1 rounded-full px-4 py-2.5 text-sm">
