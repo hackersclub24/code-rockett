@@ -96,14 +96,33 @@ function CoursePreview() {
     }
   }
 
+  const courseImages = [
+    "/images/StockCake-Code_Teaching_Session-1396074-standard.jpg",
+    "/images/StockCake-Neon_Developer_Workspace-1527102-standard.jpg",
+    "/images/StockCake-Neon_Coding_Session-465513-standard.jpg",
+  ];
+
+  function getCourseImage(index: number) {
+    return courseImages[index % courseImages.length];
+  }
+
   return (
     <div className="mt-5 w-full sm:mt-6">
       {message && <p className="mb-4 text-sm text-emerald-400">{message}</p>}
       {!courses && <p className="text-slate-400">Loading courses...</p>}
       {courses && courses.length === 0 && <p className="text-slate-500">No courses available right now.</p>}
       <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {courses?.map((course) => (
+        {courses?.map((course, index) => (
           <div key={course.id} className="glass rounded-2xl p-4 sm:p-5">
+            <div className="relative mb-4 h-40 w-full overflow-hidden rounded-xl bg-slate-800 ring-1 ring-white/10">
+              <Image
+                src={getCourseImage(index)}
+                alt={course.name}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              />
+            </div>
             <p className="text-xs uppercase tracking-wide text-slate-500">{course.level ?? 'General'}</p>
             <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">{course.name}</h3>
             {course.description && <p className="mt-3 text-sm text-slate-300">{course.description}</p>}

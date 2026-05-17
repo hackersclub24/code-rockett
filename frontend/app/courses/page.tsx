@@ -98,32 +98,36 @@ export default function CoursesPage() {
     rejected: "Request rejected - try again",
   };
 
+  const courseImages = [
+    "/images/StockCake-Coding_in_Neon-1262118-standard.jpg",
+    "/images/StockCake-Coder's_Neon_World-1904810-standard.jpg",
+    "/images/StockCake-Digital_Workspace_Glowing-1486967-standard.jpg",
+    "/images/StockCake-Neon_Developer_Workspace-1527102-standard.jpg",
+  ];
+
+  function getCourseImage(course: CourseItem, idx: number) {
+    // Try simple keyword matching, fallback to an index-based image selection
+    const name = (course.name || "").toLowerCase();
+    if (name.includes("frontend") || name.includes("react") || name.includes("next")) return courseImages[0];
+    if (name.includes("backend") || name.includes("api") || name.includes("django") || name.includes("fastapi")) return courseImages[2];
+    if (name.includes("students") || name.includes("learning")) return courseImages[3];
+    return courseImages[idx % courseImages.length];
+  }
+
   return (
     <div className="min-h-screen w-full px-6 py-16 lg:px-8">
-      <div className="mb-10 overflow-hidden rounded-3xl border border-white/10 relative">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/StockCake-Coding_in_Neon-1262118-standard.jpg"
-            alt=""
-            fill
-            className="object-cover opacity-30"
-            priority
-            sizes="100vw"
-          />
-        </div>
-        <div className="relative z-10 bg-gradient-to-r from-[#070816] via-[#070816]/80 to-transparent p-8 sm:p-12">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end justify-between max-w-4xl">
-            <div>
-              <p className="text-sm uppercase tracking-widest text-accent">Coding Rocket</p>
-              <h1 className="mt-2 text-4xl sm:text-5xl font-display font-semibold text-white">Course catalog</h1>
-              <p className="mt-3 text-slate-300">
-                Explore the courses available on the platform before logging in or requesting enrollment.
-              </p>
-            </div>
-            <Link href="/" className="btn-secondary whitespace-nowrap shrink-0">
-              Back home
-            </Link>
+      <div className="mb-10 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0b1020] via-[#11192b] to-[#070816] p-8 sm:p-12">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between max-w-4xl">
+          <div>
+            <p className="text-sm uppercase tracking-widest text-accent">Coding Rocket</p>
+            <h1 className="mt-2 text-4xl sm:text-5xl font-display font-semibold text-white">Course catalog</h1>
+            <p className="mt-3 text-slate-300">
+              Explore the courses available on the platform before logging in or requesting enrollment.
+            </p>
           </div>
+          <Link href="/" className="btn-secondary whitespace-nowrap shrink-0">
+            Back home
+          </Link>
         </div>
       </div>
 
@@ -155,8 +159,18 @@ export default function CoursesPage() {
       {!courses && <p className="text-slate-400">Loading courses...</p>}
       {courses && courses.length === 0 && <p className="text-slate-500">No courses available right now.</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {courses?.map((course) => (
+        {courses?.map((course, idx) => (
           <div key={course.id} className="glass rounded-2xl p-5">
+            <div className="relative mb-3 h-44 w-full overflow-hidden rounded-xl bg-slate-800 ring-1 ring-white/10">
+              <Image
+                src={getCourseImage(course, idx)}
+                alt={course.name}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                priority={false}
+              />
+            </div>
             <p className="text-xs uppercase tracking-wide text-slate-500">{course.level ?? "General"}</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">{course.name}</h2>
             {course.description && <p className="mt-3 text-sm text-slate-300">{course.description}</p>}
